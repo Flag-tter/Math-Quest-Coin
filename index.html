@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Math Quest</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Math Quest">
+<meta name="theme-color" content="#5B3FF2">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%235B3FF2'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3E%2B%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%235B3FF2'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3E%2B%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Math%20Quest%22%2C%22short_name%22%3A%22Math%20Quest%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23F6F4FF%22%2C%22theme_color%22%3A%22%235B3FF2%22%2C%22orientation%22%3A%22any%22%7D">
+<style>
+:root{
+  --purple:#5B3FF2; --purple-dark:#3F2AC0; --purple-light:#EDE9FF;
+  --teal:#12B5A6; --amber:#FFB020; --coral:#FF6B6B;
+  --ink:#26264D; --ink-soft:#6C6C93; --bg:#F6F4FF; --card:#FFFFFF; --line:#E4E0FA;
+  --good:#22C55E; --bad:#F04438;
+  --radius-lg:28px; --radius-md:18px; --radius-sm:12px; --tap-min:48px;
+  --shadow:0 8px 24px rgba(60,40,150,0.12);
+  --font-display:-apple-system,'SF Pro Rounded',system-ui,sans-serif;
+  --font-body:-apple-system,system-ui,sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+html,body{height:100%; overscroll-behavior:none;}
+body{margin:0; font-family:var(--font-body); background:var(--bg); color:var(--ink);
+  -webkit-font-smoothing:antialiased; touch-action:manipulation;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow:hidden; position:fixed; inset:0;}
+input,textarea{user-select:text;}
+button{font-family:inherit; -webkit-appearance:none; appearance:none; border:none; background:none; cursor:pointer; touch-action:manipulation;}
+button:active{transform:scale(0.96);}
+h1,h2,h3{font-family:var(--font-display); margin:0;}
+::-webkit-scrollbar{display:none;}
+.scroll{overflow-y:auto; -webkit-overflow-scrolling:touch;}
+#app{position:absolute; inset:0; display:flex; flex-direction:column;}
+.view{position:absolute; inset:0; display:none; flex-direction:column; animation:fadeIn .25s ease;}
+.view.active{display:flex;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+.btn{min-height:var(--tap-min); padding:14px 22px; border-radius:var(--radius-md);
+  font-size:17px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  transition:transform .1s ease, box-shadow .15s ease;}
+.btn-primary{background:var(--purple); color:#fff; box-shadow:0 6px 16px rgba(91,63,242,0.35);}
+.btn-secondary{background:var(--purple-light); color:var(--purple-dark);}
+.btn-ghost{background:transparent; color:var(--ink-soft); border:2px solid var(--line);}
+.btn-good{background:var(--teal); color:#fff;}
+.btn-danger{background:#FFE7E5; color:var(--bad);}
+.btn-block{width:100%;}
+.btn-lg{min-height:64px; font-size:20px; border-radius:var(--radius-lg);}
+.btn-icon{width:48px; height:48px; border-radius:14px; background:var(--purple-light); color:var(--purple-dark); font-size:20px;}
+.card{background:var(--card); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:20px;}
+.row{display:flex; align-items:center; gap:12px;}
+.between{justify-content:space-between;}
+.wrap{flex-wrap:wrap;}
+.col{display:flex; flex-direction:column; gap:12px;}
+.pill{padding:6px 14px; border-radius:999px; background:var(--purple-light); color:var(--purple-dark); font-weight:700; font-size:13px;}
+.grid{display:grid; gap:16px;}
+.grid-2{grid-template-columns:1fr 1fr;}
+.grid-3{grid-template-columns:1fr 1fr 1fr;}
+.muted{color:var(--ink-soft); font-size:14px;}
+label.field{display:flex; flex-direction:column; gap:6px; font-size:14px; font-weight:600; color:var(--ink-soft);}
+input[type=text],input[type=number],input[type=password],select,textarea{
+  min-height:48px; border-radius:var(--radius-sm); border:2px solid var(--line); padding:10px 14px;
+  font-size:16px; background:#fff; color:var(--ink); width:100%;}
+input[type=range]{width:100%; height:48px;}
+input[type=color]{width:100%; height:48px; border-radius:var(--radius-sm); border:2px solid var(--line);}
+.toggle{position:relative; width:56px; height:32px; border-radius:20px; background:var(--line); flex:none;}
+.toggle.on{background:var(--teal);}
+.toggle .knob{position:absolute; top:3px; left:3px; width:26px; height:26px; border-radius:50%; background:#fff; transition:left .15s ease; box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.toggle.on .knob{left:27px;}
+.modal-backdrop{position:absolute; inset:0; background:rgba(38,38,77,0.55); display:none; align-items:center; justify-content:center; z-index:50; padding:20px;}
+.modal-backdrop.active{display:flex;}
+.modal{background:#fff; border-radius:var(--radius-lg); padding:24px; width:100%; max-width:420px; max-height:88vh; box-shadow:var(--shadow);}
+#toast{position:absolute; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:12px 22px; border-radius:999px; font-weight:600; z-index:99; opacity:0; transition:opacity .25s ease, transform .25s ease; pointer-events:none;}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+.kid-header{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; flex:none;}
+.coin-badge{display:flex; align-items:center; gap:6px; background:#fff; border-radius:999px; padding:8px 16px; box-shadow:var(--shadow); font-weight:800; font-size:17px; color:var(--amber);}
+.logo-tap{width:44px; height:44px; border-radius:14px; background:var(--purple); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:20px; font-family:var(--font-display);}
+.cat-tile{border-radius:var(--radius-md); padding:18px; color:#fff; text-align:left; min-height:96px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow);}
+.cat-tile .emoji{font-size:28px;}
+.cat-tile .name{font-weight:800; font-size:15px;}
+.problem-wrap{flex:1; display:flex; flex-direction:column; padding:20px; gap:20px;}
+.problem-progress{height:10px; background:var(--line); border-radius:6px; overflow:hidden; flex:none;}
+.problem-progress-fill{height:100%; background:var(--teal); border-radius:6px; transition:width .3s ease;}
+.problem-stage{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; text-align:center;}
+.problem-prompt{font-size:clamp(22px,5vw,34px); font-weight:800; font-family:var(--font-display);}
+.choices{display:grid; grid-template-columns:1fr 1fr; gap:14px; width:100%; max-width:480px;}
+.choice-btn{min-height:64px; border-radius:var(--radius-md); background:#fff; border:3px solid var(--line); font-size:22px; font-weight:800; box-shadow:var(--shadow);}
+.choice-btn.correct{border-color:var(--good); background:#E9FBEF;}
+.choice-btn.wrong{border-color:var(--bad); background:#FEECEC;}
+.numpad{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:320px;}
+.numpad button{min-height:56px; border-radius:14px; background:#fff; border:2px solid var(--line); font-size:22px; font-weight:800; box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.answer-display{min-width:160px; min-height:64px; border-radius:var(--radius-md); background:#fff; border:3px solid var(--purple); font-size:32px; font-weight:900; display:flex; align-items:center; justify-content:center; padding:0 20px;}
+.emoji-row{font-size:34px; line-height:1.3; word-spacing:6px;}
+.tabs{display:flex; gap:8px; overflow-x:auto; padding:4px 0;}
+.tab-btn{padding:10px 16px; border-radius:999px; background:var(--purple-light); color:var(--purple-dark); font-weight:700; font-size:14px; white-space:nowrap; flex:none;}
+.tab-btn.active{background:var(--purple); color:#fff;}
+.pinpad{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:280px; margin:16px auto 0;}
+.pinpad button{min-height:60px; border-radius:16px; background:var(--purple-light); font-size:22px; font-weight:800; color:var(--purple-dark);}
+.pin-dots{display:flex; justify-content:center; gap:12px; margin:8px 0;}
+.pin-dot{width:16px; height:16px; border-radius:50%; background:var(--line);}
+.pin-dot.filled{background:var(--purple);}
+.list-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; border-radius:var(--radius-sm); background:#fff; border:1px solid var(--line);}
+.empty-state{text-align:center; color:var(--ink-soft); padding:40px 20px;}
+.center{display:flex; align-items:center; justify-content:center;}
+.spacer{flex:1;}
+@media (min-width: 700px){ .choices{grid-template-columns:1fr 1fr 1fr 1fr;} }
+.auth-wrap{flex:1; display:flex; flex-direction:column; justify-content:center; padding:28px; gap:16px; max-width:440px; margin:0 auto; width:100%;}
+.auth-logo{width:72px; height:72px; border-radius:20px; background:var(--purple); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:34px; font-family:var(--font-display); margin:0 auto 8px;}
+.role-card{background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:24px; text-align:center; border:2px solid transparent;}
+.role-card:active{transform:scale(0.98);}
+.link-btn{background:none; border:none; color:var(--purple); font-weight:700; font-size:14px; padding:6px;}
+.code-display{font-size:40px; font-weight:900; letter-spacing:8px; font-family:var(--font-display); text-align:center; background:var(--purple-light); color:var(--purple-dark); border-radius:var(--radius-md); padding:18px; margin:12px 0;}
+.bell-btn{position:relative; width:44px; height:44px; border-radius:14px; background:var(--purple-light); font-size:19px; display:flex; align-items:center; justify-content:center;}
+.bell-dot{position:absolute; top:4px; right:4px; width:10px; height:10px; border-radius:50%; background:var(--coral); border:2px solid #fff;}
+.notif-row{display:flex; gap:10px; padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:#fff;}
+.notif-row.unread{background:var(--purple-light);}
+.notif-icon{font-size:20px; flex:none;}
+.stat-card{background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow); padding:14px; text-align:center;}
+.stat-card .big{font-size:24px; font-weight:900; color:var(--purple-dark); font-family:var(--font-display);}
+.stat-card .lbl{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+.heatmap{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+.heat-cell{aspect-ratio:1; border-radius:4px; background:var(--line);}
+.sync-dot{width:9px; height:9px; border-radius:50%; background:var(--good); display:inline-block; margin-right:6px;}
+.sync-dot.off{background:var(--ink-soft);}
+.avatar-opt{width:52px; height:52px; border-radius:14px; font-size:26px; display:flex; align-items:center; justify-content:center; background:var(--purple-light); border:3px solid transparent;}
+.avatar-opt.sel{border-color:var(--purple);}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+</head>
+<body>
+<div id="app">
+  <div id="toast"></div>
+
+  <section class="view active" id="view-welcome">
+    <div class="auth-wrap">
+      <div class="auth-logo">+</div>
+      <h1 style="text-align:center; font-size:26px;">Math Quest</h1>
+      <p class="muted" style="text-align:center;">Who's playing today?</p>
+      <button class="role-card" id="roleKidBtn">
+        <div style="font-size:34px;">🧒</div>
+        <h3 style="margin-top:6px;">I'm a Kid</h3>
+        <p class="muted">Enter your family code to play</p>
+      </button>
+      <button class="role-card" id="roleParentBtn">
+        <div style="font-size:34px;">👨‍👩‍👧</div>
+        <h3 style="margin-top:6px;">I'm a Grown-up</h3>
+        <p class="muted">Sign in to set up & manage</p>
+      </button>
+    </div>
+  </section>
+
+  <section class="view" id="view-parent-auth">
+    <div class="auth-wrap">
+      <button class="btn btn-ghost" id="authBackBtn" style="align-self:flex-start;">← Back</button>
+      <h2 id="authTitle" style="text-align:center;">Grown-up Sign In</h2>
+      <div class="card col">
+        <label class="field">Email<input type="text" id="authEmail" autocomplete="email" placeholder="you@example.com"></label>
+        <label class="field">Password<input type="password" id="authPassword" autocomplete="current-password" placeholder="••••••••"></label>
+        <label class="field" id="authKidNameWrap" style="display:none;">Kid's name<input type="text" id="authKidName" placeholder="Math Star"></label>
+        <p class="muted" id="authError" style="color:var(--bad); min-height:18px;"></p>
+        <button class="btn btn-primary btn-block" id="authSubmitBtn">Sign In</button>
+        <button class="link-btn" id="authToggleModeBtn">Need an account? Sign up</button>
+        <button class="link-btn" id="authForgotBtn">Forgot password?</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-kid-code">
+    <div class="auth-wrap">
+      <button class="btn btn-ghost" id="kidCodeBackBtn" style="align-self:flex-start;">← Back</button>
+      <h2 style="text-align:center;">Enter Your Family Code</h2>
+      <p class="muted" style="text-align:center;">Ask a grown-up for the 6-character code from Parent Dashboard → Family</p>
+      <div class="card col">
+        <input type="text" id="kidCodeInput" maxlength="6" style="text-align:center; font-size:26px; letter-spacing:6px; text-transform:uppercase; font-weight:800;" placeholder="ABC123">
+        <p class="muted" id="kidCodeError" style="color:var(--bad); min-height:18px;"></p>
+        <button class="btn btn-primary btn-block" id="kidCodeSubmitBtn">Join Family</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-kid-home">
+    <div class="kid-header">
+      <button class="logo-tap" id="logoTap">+</button>
+      <div class="coin-badge">🪙 <span id="coinCount">0</span></div>
+    </div>
+    <div class="scroll" style="flex:1; padding:0 20px 24px;">
+      <h1 style="font-size:26px; margin-bottom:4px;" id="kidGreeting">Hi, Math Star! 👋</h1>
+      <p class="muted" style="margin-bottom:18px;">Pick something to practice</p>
+      <div id="lessonRow" class="row wrap" style="margin-bottom:22px;"></div>
+      <h2 style="font-size:18px; margin-bottom:12px;">Practice by topic</h2>
+      <div id="categoryGrid" class="grid grid-2"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-problem">
+    <div class="problem-wrap">
+      <div class="row">
+        <button class="btn btn-icon" id="problemExitBtn">✕</button>
+        <div class="problem-progress" style="flex:1;"><div class="problem-progress-fill" id="problemProgressFill"></div></div>
+        <div class="coin-badge">🪙 <span id="coinCountProblem">0</span></div>
+      </div>
+      <div class="problem-stage" id="problemStage"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-complete">
+    <div class="center col" style="flex:1; padding:24px; text-align:center;">
+      <div style="font-size:64px;">🎉</div>
+      <h1 style="font-size:28px; margin:12px 0 4px;">Great job!</h1>
+      <p class="muted" id="completeSummary"></p>
+      <div class="row" style="margin-top:24px;">
+        <div class="pill">✅ <span id="completeCorrect"></span> correct</div>
+        <div class="pill">🪙 +<span id="completeCoins"></span></div>
+      </div>
+      <button class="btn btn-primary btn-lg" style="margin-top:32px;" id="completeDoneBtn">Continue</button>
+    </div>
+  </section>
+
+  <section class="view" id="view-pin">
+    <div class="col" style="flex:1; padding:24px; justify-content:center; align-items:center; text-align:center;">
+      <button class="btn btn-ghost" id="pinBackBtn" style="align-self:flex-start;">← Back</button>
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+        <h2 id="pinTitle">Enter Parent PIN</h2>
+        <p class="muted" id="pinSubtitle">Grown-ups only</p>
+        <div class="pin-dots" id="pinDots"></div>
+        <div class="pinpad" id="pinPad"></div>
+        <p class="muted" id="pinError" style="color:var(--bad); min-height:20px;"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-parent">
+    <div class="kid-header">
+      <h2>Parent Dashboard</h2>
+      <div class="row">
+        <button class="bell-btn" id="notifBellBtn">🔔<div class="bell-dot" id="notifDot" style="display:none;"></div></button>
+        <button class="btn btn-secondary" id="parentExitBtn">Done</button>
+      </div>
+    </div>
+    <div class="row" id="syncStatusRow" style="padding:0 20px 6px; font-size:12px; color:var(--ink-soft);">
+      <span class="sync-dot off" id="syncDot"></span><span id="syncStatusText">Local only — not signed in</span>
+    </div>
+    <div class="tabs" id="parentTabs" style="padding:0 16px;"></div>
+    <div class="scroll" id="parentContent" style="flex:1; padding:16px 20px 40px;"></div>
+  </section>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal scroll" id="modalBody" style="max-height:85vh;"></div>
+  </div>
+</div>
+<script>
+/* ============================================================
+   FIREBASE INIT
+   Auth (email/password for parents, anonymous for kid devices),
+   Firestore (family data + realtime sync).
+
+   Defensive: if the Firebase SDK failed to load (offline, blocked
+   CDN, ad-blocker, CSP, etc.) `firebase` won't exist as a global
+   and referencing it directly used to throw
+   "ReferenceError: firebase is not defined" and crash the whole
+   app before it could even render. Instead we detect that case
+   and fall back to safe no-op stand-ins so kid/local play (which
+   needs no network at all) keeps working, and any parent
+   sign-in/sync action just surfaces a friendly error instead of
+   crashing the page.
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDp8RmnWlhGKIf79-9ipSwecq4FIYqx0NQ",
+  authDomain: "math-quest-coin.firebaseapp.com",
+  projectId: "math-quest-coin",
+  messagingSenderId: "1057204372515",
+  appId: "1:1057204372515:web:a5e16cd8a7fbec5c461d96"
+};
+
+const firebaseAvailable = typeof firebase !== 'undefined';
+let fbAuth, fbDb;
+
+function fbServerTimestamp() {
+  return firebaseAvailable ? firebase.firestore.FieldValue.serverTimestamp() : Date.now();
+}
+
+if (firebaseAvailable) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    fbAuth = firebase.auth();
+    fbDb = firebase.firestore();
+    try { fbDb.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}
+    fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
+  } catch (e) {
+    console.warn('Firebase failed to initialize — running in local-only mode.', e);
+    fbAuth = null; fbDb = null;
+  }
+} else {
+  console.warn('Firebase SDK did not load (offline or blocked) — running in local-only mode.');
+}
+
+if (!fbAuth || !fbDb) {
+  const offlineError = () => Promise.reject(new Error('Cloud sync is unavailable right now — check your connection and reload.'));
+  const offlineCollectionRef = () => ({
+    doc: () => offlineDocRef(),
+    where: () => ({ limit: () => ({ get: async () => ({ empty: true, docs: [] }) }) }),
+  });
+  const offlineDocRef = () => ({
+    get: offlineError,
+    set: offlineError,
+    delete: offlineError,
+    collection: () => offlineCollectionRef(),
+  });
+  fbAuth = fbAuth || {
+    currentUser: null,
+    createUserWithEmailAndPassword: offlineError,
+    signInWithEmailAndPassword: offlineError,
+    sendPasswordResetEmail: offlineError,
+    signInAnonymously: offlineError,
+    signOut: async () => {},
+    setPersistence: async () => {},
+    // Deferred so any `unsub` variable the caller assigns from this call's
+    // return value is already set before the callback fires.
+    onAuthStateChanged: (cb) => { Promise.resolve().then(() => cb(null)); return () => {}; },
+  };
+  fbDb = fbDb || { collection: () => offlineCollectionRef() };
+}
+</script>
+<script>
+/* ================================================================
+   MATH QUEST — single-file app
+   Sections: Utilities, Storage, Constants/Categories, ProblemGenerator,
+   ProblemEngine, CoinSystem, Analytics, LessonEngine,
+   Navigation, KidUI, ParentUI (Dashboard tabs), Settings, PIN/Gate,
+   Sync (stub), Bootstrap
+   ================================================================ */
+
+/* ============================================================
+   UTILITY FUNCTIONS
+   ============================================================ */
+const Util = (() => {
+  function uid(prefix) {
+    return (prefix || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function randInt(min, max) { // inclusive
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  function pick(arr) { return arr[randInt(0, arr.length - 1)]; }
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = randInt(0, i);
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+  function toast(msg, ms) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('show'), ms || 1800);
+  }
+  function fmtDate(ts) {
+    const d = new Date(ts);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+  function vibrate(pattern) {
+    if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
+  }
+  function debounce(fn, wait) {
+    let t;
+    return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
+  }
+  return { uid, randInt, pick, shuffle, clamp, escapeHtml, toast, fmtDate, vibrate, debounce };
+})();
+
+/* ============================================================
+   STORAGE — IndexedDB wrapper
+   Stores: settings, pin, problems, lessons, progress, mastery,
+           coins, customization, analytics
+   ============================================================ */
+const Storage = (() => {
+  const DB_NAME = 'MathQuestDB';
+  const DB_VERSION = 1;
+  const STORES = ['settings', 'pin', 'problems', 'lessons', 'progress', 'mastery',
+                   'coins', 'customization', 'analytics', 'notifications', 'family'];
+  let dbPromise = null;
+
+  function open() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        STORES.forEach(name => {
+          if (!db.objectStoreNames.contains(name)) {
+            db.createObjectStore(name, { keyPath: 'key' });
+          }
+        });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    return dbPromise;
+  }
+
+  async function get(store, key) {
+    const db = await open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readonly');
+      const rq = tx.objectStore(store).get(key);
+      rq.onsuccess = () => resolve(rq.result ? rq.result.value : undefined);
+      rq.onerror = () => reject(rq.error);
+    });
+  }
+
+  async function set(store, key, value, skipSync) {
+    const db = await open();
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).put({ key, value });
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+    if (!skipSync && typeof CloudSync !== 'undefined' && CloudSync.isActive() && CloudSync.SYNC_STORES.includes(store)) {
+      CloudSync.push(store, key, value);
+    }
+    return true;
+  }
+
+  async function del(store, key, skipSync) {
+    const db = await open();
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).delete(key);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+    if (!skipSync && typeof CloudSync !== 'undefined' && CloudSync.isActive() && CloudSync.SYNC_STORES.includes(store)) {
+      CloudSync.remove(store, key);
+    }
+    return true;
+  }
+
+  async function all(store) {
+    const db = await open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readonly');
+      const rq = tx.objectStore(store).getAll();
+      rq.onsuccess = () => resolve((rq.result || []).map(r => r.value));
+      rq.onerror = () => reject(rq.error);
+    });
+  }
+
+  async function clearStore(store) {
+    const db = await open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).clear();
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function rawAll(store) {
+    const db = await open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readonly');
+      const rq = tx.objectStore(store).getAll();
+      rq.onsuccess = () => resolve(rq.result || []);
+      rq.onerror = () => reject(rq.error);
+    });
+  }
+
+  async function exportAll() {
+    const dump = {};
+    for (const s of STORES) dump[s] = await rawAll(s); // {key, value} rows, ready for re-import
+    return dump;
+  }
+
+  async function importAll(dump) {
+    const db = await open();
+    for (const s of Object.keys(dump)) {
+      if (!STORES.includes(s)) continue;
+      await clearStore(s);
+      const tx = db.transaction(s, 'readwrite');
+      const store = tx.objectStore(s);
+      (dump[s] || []).forEach(row => store.put(row));
+      await new Promise((resolve, reject) => { tx.oncomplete = resolve; tx.onerror = () => reject(tx.error); });
+    }
+  }
+
+  async function wipeAll() {
+    for (const s of STORES) await clearStore(s);
+  }
+
+  return { get, set, del, all, clearStore, exportAll, importAll, wipeAll, STORES };
+})();
+</script>
+<script>
+/* ============================================================
+   FAMILY AUTH
+   Parents: Firebase email/password auth. On sign-up we create a
+   `families/{familyId}` doc and a random 6-char join code. Kid
+   devices never get an email/password — they sign in anonymously
+   and "join" a family by presenting that code, which doubles as
+   the family's Firestore document id (see the rules at the bottom
+   of this file for the security model this relies on).
+   ============================================================ */
+const FamilyAuth = (() => {
+  const CODE_CHARS = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // no 0/O/1/I to avoid confusion
+  function genCode(len) {
+    len = len || 6;
+    let out = '';
+    const buf = new Uint32Array(len);
+    crypto.getRandomValues(buf);
+    for (let i = 0; i < len; i++) out += CODE_CHARS[buf[i] % CODE_CHARS.length];
+    return out;
+  }
+
+  async function getLocal() { return (await Storage.get('family', 'link')) || null; }
+  async function setLocal(patch) {
+    const cur = (await getLocal()) || {};
+    const next = Object.assign({}, cur, patch);
+    await Storage.set('family', 'link', next, true);
+    return next;
+  }
+  async function clearLocal() { await Storage.del('family', 'link', true); }
+
+  async function signUpParent(email, password, kidName) {
+    const cred = await fbAuth.createUserWithEmailAndPassword(email, password);
+    let familyId;
+    // Extremely unlikely collision loop, but check anyway since the code IS the doc id.
+    for (let tries = 0; tries < 5; tries++) {
+      familyId = genCode(6);
+      const snap = await fbDb.collection('families').doc(familyId).get();
+      if (!snap.exists) break;
+    }
+    await fbDb.collection('families').doc(familyId).set({
+      parentUid: cred.user.uid,
+      parentEmail: email,
+      kidName: kidName || 'Math Star',
+      createdAt: fbServerTimestamp(),
+    });
+    await setLocal({ role: 'parent', familyId, parentUid: cred.user.uid });
+    return familyId;
+  }
+
+  async function signInParent(email, password) {
+    const cred = await fbAuth.signInWithEmailAndPassword(email, password);
+    const q = await fbDb.collection('families').where('parentUid', '==', cred.user.uid).limit(1).get();
+    if (q.empty) throw new Error('No family found for this account.');
+    const familyId = q.docs[0].id;
+    await setLocal({ role: 'parent', familyId, parentUid: cred.user.uid });
+    return familyId;
+  }
+
+  async function sendPasswordReset(email) { return fbAuth.sendPasswordResetEmail(email); }
+
+  async function linkKidWithCode(code) {
+    code = String(code || '').trim().toUpperCase();
+    if (!code) throw new Error('Enter a code.');
+    if (!fbAuth.currentUser) await fbAuth.signInAnonymously();
+    const docRef = fbDb.collection('families').doc(code);
+    const snap = await docRef.get();
+    if (!snap.exists) throw new Error('That code was not found. Double-check it with a grown-up.');
+    await docRef.collection('devices').doc(fbAuth.currentUser.uid).set({
+      linkedAt: fbServerTimestamp(),
+      kind: 'kid',
+    });
+    await setLocal({ role: 'kid', familyId: code });
+    return code;
+  }
+
+  async function regenerateCode(oldFamilyId) {
+    // Copies the family doc to a new random id and marks the old one migrated.
+    // (Firestore has no native "rename document" — a fresh id is the safe way
+    // to invalidate a code that may have leaked.)
+    const oldRef = fbDb.collection('families').doc(oldFamilyId);
+    const oldSnap = await oldRef.get();
+    if (!oldSnap.exists) throw new Error('Family not found.');
+    let newId;
+    for (let tries = 0; tries < 5; tries++) {
+      newId = genCode(6);
+      const s = await fbDb.collection('families').doc(newId).get();
+      if (!s.exists) break;
+    }
+    await fbDb.collection('families').doc(newId).set(oldSnap.data());
+    for (const store of CloudSync.SYNC_STORES) {
+      const rows = await oldRef.collection(store).get();
+      for (const d of rows.docs) await fbDb.collection('families').doc(newId).collection(store).doc(d.id).set(d.data());
+    }
+    await oldRef.update({ migratedTo: newId });
+    await setLocal({ familyId: newId });
+    return newId;
+  }
+
+  async function signOut() {
+    try { await fbAuth.signOut(); } catch (e) {}
+    await clearLocal();
+  }
+
+  return { genCode, getLocal, setLocal, clearLocal, signUpParent, signInParent,
+    sendPasswordReset, linkKidWithCode, regenerateCode, signOut };
+})();
+
+/* ============================================================
+   CLOUD SYNC
+   Bidirectional sync between IndexedDB (fast local cache, works
+   offline) and Firestore (source of truth across devices) for
+   every store except `pin` and raw `family` link state, which stay
+   device-local for security/simplicity. Realtime listeners push
+   remote changes (e.g. a parent editing a template) straight into
+   the local UI on every linked device within ~1s.
+   ============================================================ */
+const CloudSync = (() => {
+  const SYNC_STORES = ['settings', 'problems', 'lessons', 'progress', 'mastery',
+                        'coins', 'customization', 'analytics', 'notifications'];
+  let familyId = null;
+  let unsubs = [];
+  let active = false;
+  let pendingLocalWrites = new Set(); // "store:key" written locally in the last tick, to ignore the resulting echo
+  let onRemoteChange = null; // callback(store, key, value) for UI refresh
+  let lastSyncedAt = null;
+
+  function isActive() { return active; }
+  function setOnRemoteChange(cb) { onRemoteChange = cb; }
+  function getLastSyncedAt() { return lastSyncedAt; }
+
+  async function start(id) {
+    if (active && familyId === id) return;
+    await stop();
+    familyId = id;
+    active = true;
+    for (const store of SYNC_STORES) {
+      const unsub = fbDb.collection('families').doc(familyId).collection(store)
+        .onSnapshot(async (snap) => {
+          snap.docChanges().forEach(async (change) => {
+            const key = change.doc.id;
+            const tag = store + ':' + key;
+            if (pendingLocalWrites.has(tag)) { pendingLocalWrites.delete(tag); return; }
+            if (change.type === 'removed') {
+              await Storage.del(store, key, true);
+            } else {
+              const data = change.doc.data();
+              const { updatedAt, ...value } = data;
+              await Storage.set(store, key, value, true);
+            }
+            lastSyncedAt = Date.now();
+            onRemoteChange && onRemoteChange(store, key);
+          });
+        }, (err) => console.warn('sync listen error', store, err));
+      unsubs.push(unsub);
+    }
+  }
+
+  async function stop() {
+    unsubs.forEach(u => u());
+    unsubs = [];
+    active = false;
+    familyId = null;
+  }
+
+  function push(store, key, value) {
+    if (!active) return;
+    const tag = store + ':' + key;
+    pendingLocalWrites.add(tag);
+    fbDb.collection('families').doc(familyId).collection(store).doc(key)
+      .set(Object.assign({}, value, { updatedAt: fbServerTimestamp() }), { merge: false })
+      .then(() => { lastSyncedAt = Date.now(); })
+      .catch((err) => { pendingLocalWrites.delete(tag); console.warn('sync push failed', store, key, err); });
+  }
+
+  function remove(store, key) {
+    if (!active) return;
+    const tag = store + ':' + key;
+    pendingLocalWrites.add(tag);
+    fbDb.collection('families').doc(familyId).collection(store).doc(key).delete()
+      .catch((err) => { pendingLocalWrites.delete(tag); console.warn('sync remove failed', store, key, err); });
+  }
+
+  // One-time pull used right after linking a device, so a kid device that
+  // just joined immediately has all existing lessons/templates/customization.
+  async function pullAll() {
+    for (const store of SYNC_STORES) {
+      const rows = await fbDb.collection('families').doc(familyId).collection(store).get();
+      for (const d of rows.docs) {
+        const { updatedAt, ...value } = d.data();
+        await Storage.set(store, d.id, value, true);
+      }
+    }
+  }
+
+  return { SYNC_STORES, isActive, start, stop, push, remove, pullAll, setOnRemoteChange, getLastSyncedAt };
+})();
+
+/* ============================================================
+   NOTIFICATION CENTER
+   In-app notification feed (always available, synced via
+   CloudSync so it also shows up if a parent checks from a second
+   device) plus best-effort native browser notifications while the
+   dashboard tab is open. True background push (phone locked, app
+   closed) needs Firebase Cloud Messaging + a server/Cloud Function
+   to trigger sends — this app has no backend, so that part is left
+   as a documented hook rather than faked.
+   ============================================================ */
+const NotificationCenter = (() => {
+  async function log(type, title, body, meta) {
+    const id = Util.uid('ntf');
+    const rec = { id, type, title, body, meta: meta || {}, read: false, createdAt: Date.now() };
+    await Storage.set('notifications', id, rec);
+    updateBadge();
+    if (document.getElementById('view-parent').classList.contains('active')) renderIfOpen();
+    if (Notification && Notification.permission === 'granted') {
+      try { new Notification(title, { body, tag: id }); } catch (e) {}
+    }
+    return rec;
+  }
+  async function all() {
+    const rows = await Storage.all('notifications');
+    return rows.sort((a, b) => b.createdAt - a.createdAt);
+  }
+  async function unreadCount() { return (await all()).filter(n => !n.read).length; }
+  async function markRead(id) {
+    const n = await Storage.get('notifications', id);
+    if (n) { n.read = true; await Storage.set('notifications', id, n); }
+    updateBadge();
+  }
+  async function markAllRead() {
+    const rows = await all();
+    for (const n of rows) if (!n.read) { n.read = true; await Storage.set('notifications', n.id, n); }
+    updateBadge();
+  }
+  async function requestPermission() {
+    if (!('Notification' in window)) return 'unsupported';
+    return Notification.requestPermission();
+  }
+  async function updateBadge() {
+    const dot = document.getElementById('notifDot');
+    if (!dot) return;
+    const c = await unreadCount();
+    dot.style.display = c > 0 ? 'block' : 'none';
+  }
+  function renderIfOpen() { if (typeof ParentUI !== 'undefined') ParentUI.refreshIfNotifTab && ParentUI.refreshIfNotifTab(); }
+  return { log, all, unreadCount, markRead, markAllRead, requestPermission, updateBadge };
+})();
+</script>
+<script>
+/* ============================================================
+   CATEGORIES + PROBLEM GENERATOR
+   Each category is a parameterized generator. Parents edit the
+   params (ranges, toggles) rather than hand-writing each problem,
+   which is what makes "hundreds of templates" possible without
+   hundreds of near-duplicate JSON blobs. Every category also
+   supports full manual override via the Problem Editor (Parent tab).
+   ============================================================ */
+const CATEGORIES = [
+  { id: 'add-within-10', name: 'Addition to 10', emoji: '➕', color: '#5B3FF2',
+    schema: [{ key: 'max', label: 'Sum up to', type: 'range', min: 5, max: 10, step: 1, def: 10 },
+             { key: 'choices', label: 'Multiple choice', type: 'toggle', def: true }] },
+  { id: 'add-within-20', name: 'Addition to 20', emoji: '➕', color: '#5B3FF2',
+    schema: [{ key: 'max', label: 'Sum up to', type: 'range', min: 11, max: 20, step: 1, def: 20 },
+             { key: 'choices', label: 'Multiple choice', type: 'toggle', def: true }] },
+  { id: 'add-carrying', name: 'Addition w/ Carrying', emoji: '🧮', color: '#5B3FF2',
+    schema: [{ key: 'digits', label: 'Digits', type: 'range', min: 2, max: 3, step: 1, def: 2 }] },
+  { id: 'sub-within-10', name: 'Subtraction to 10', emoji: '➖', color: '#12B5A6',
+    schema: [{ key: 'max', label: 'Start up to', type: 'range', min: 5, max: 10, step: 1, def: 10 },
+             { key: 'choices', label: 'Multiple choice', type: 'toggle', def: true }] },
+  { id: 'sub-within-20', name: 'Subtraction to 20', emoji: '➖', color: '#12B5A6',
+    schema: [{ key: 'max', label: 'Start up to', type: 'range', min: 11, max: 20, step: 1, def: 20 },
+             { key: 'choices', label: 'Multiple choice', type: 'toggle', def: true }] },
+  { id: 'sub-borrowing', name: 'Subtraction w/ Borrowing', emoji: '🧮', color: '#12B5A6',
+    schema: [{ key: 'digits', label: 'Digits', type: 'range', min: 2, max: 3, step: 1, def: 2 }] },
+  { id: 'picture-counting', name: 'Picture Counting', emoji: '🖼️', color: '#FF6B6B',
+    schema: [{ key: 'max', label: 'Count up to', type: 'range', min: 5, max: 20, step: 1, def: 12 }] },
+  { id: 'object-counting', name: 'Object Counting', emoji: '🍎', color: '#FF6B6B',
+    schema: [{ key: 'max', label: 'Count up to', type: 'range', min: 5, max: 20, step: 1, def: 15 }] },
+  { id: 'number-line', name: 'Number Lines', emoji: '📏', color: '#FFB020',
+    schema: [{ key: 'max', label: 'Line length', type: 'range', min: 10, max: 30, step: 1, def: 20 }] },
+  { id: 'missing-number', name: 'Missing Numbers', emoji: '❓', color: '#FFB020',
+    schema: [{ key: 'max', label: 'Max value', type: 'range', min: 10, max: 100, step: 5, def: 20 }] },
+  { id: 'ten-frames', name: 'Ten Frames', emoji: '🔟', color: '#5B3FF2',
+    schema: [{ key: 'max', label: 'Count up to', type: 'range', min: 5, max: 20, step: 1, def: 10 }] },
+  { id: 'base-ten-blocks', name: 'Base-Ten Blocks', emoji: '🧱', color: '#5B3FF2',
+    schema: [{ key: 'max', label: 'Value up to', type: 'range', min: 10, max: 99, step: 1, def: 50 }] },
+  { id: 'story-problems', name: 'Story Problems', emoji: '📖', color: '#12B5A6',
+    schema: [{ key: 'max', label: 'Numbers up to', type: 'range', min: 5, max: 20, step: 1, def: 10 }] },
+  { id: 'greater-less', name: 'Greater / Less Than', emoji: '⚖️', color: '#FF6B6B',
+    schema: [{ key: 'max', label: 'Numbers up to', type: 'range', min: 10, max: 100, step: 5, def: 50 }] },
+  { id: 'even-odd', name: 'Even / Odd', emoji: '🔢', color: '#FF6B6B',
+    schema: [{ key: 'max', label: 'Numbers up to', type: 'range', min: 10, max: 100, step: 5, def: 20 }] },
+  { id: 'skip-counting', name: 'Skip Counting', emoji: '⏭️', color: '#FFB020',
+    schema: [{ key: 'step', label: 'Count by', type: 'select', options: [2, 3, 5, 10], def: 2 }] },
+  { id: 'patterns', name: 'Patterns', emoji: '🔁', color: '#FFB020',
+    schema: [{ key: 'length', label: 'Pattern length', type: 'range', min: 4, max: 8, step: 1, def: 5 }] },
+  { id: 'clock-reading', name: 'Clock Reading', emoji: '🕐', color: '#5B3FF2',
+    schema: [{ key: 'halfHours', label: 'Include half hours', type: 'toggle', def: true }] },
+  { id: 'money', name: 'Money', emoji: '💰', color: '#12B5A6',
+    schema: [{ key: 'maxCents', label: 'Total up to (cents)', type: 'range', min: 25, max: 200, step: 5, def: 100 }] },
+  { id: 'measurement', name: 'Measurement', emoji: '📐', color: '#FF6B6B',
+    schema: [{ key: 'maxInches', label: 'Length up to (in)', type: 'range', min: 5, max: 24, step: 1, def: 12 }] },
+];
+
+function categoryById(id) { return CATEGORIES.find(c => c.id === id); }
+
+const OBJECT_EMOJI = ['🍎', '⭐', '🎈', '🐝', '🐠', '🚗', '🌸', '⚽', '🍩', '🦋'];
+
+const ProblemGenerator = (() => {
+  function defaultParams(catId) {
+    const cat = categoryById(catId);
+    const p = {};
+    (cat.schema || []).forEach(s => p[s.key] = s.def);
+    return p;
+  }
+
+  function makeChoices(correct, spread) {
+    const set = new Set([correct]);
+    let tries = 0;
+    while (set.size < 4 && tries < 30) {
+      tries++;
+      const delta = Util.randInt(-spread, spread) || 1;
+      const cand = correct + delta;
+      if (cand >= 0) set.add(cand);
+    }
+    while (set.size < 4) set.add(correct + set.size + 1);
+    return Util.shuffle([...set]).map(String);
+  }
+
+  function svgNumberLine(max, markAt) {
+    const w = 640, pad = 30, usable = w - pad * 2;
+    let ticks = '';
+    for (let i = 0; i <= max; i++) {
+      const x = pad + (usable * i) / max;
+      const big = (i % (max > 20 ? 5 : 1) === 0);
+      ticks += `<line x1="${x}" y1="60" x2="${x}" y2="${big ? 44 : 52}" stroke="#5B3FF2" stroke-width="2"/>`;
+      if (big) ticks += `<text x="${x}" y="34" font-size="14" text-anchor="middle" fill="#26264D" font-weight="700">${i}</text>`;
+    }
+    let marker = '';
+    if (markAt != null) {
+      const x = pad + (usable * markAt) / max;
+      marker = `<circle cx="${x}" cy="60" r="9" fill="#FF6B6B" stroke="#fff" stroke-width="2"/>`;
+    }
+    return `<svg viewBox="0 0 ${w} 80" style="width:100%;max-width:560px;height:auto;">
+      <line x1="${pad}" y1="60" x2="${w - pad}" y2="60" stroke="#5B3FF2" stroke-width="3"/>${ticks}${marker}</svg>`;
+  }
+
+  function svgTenFrame(count, capacity) {
+    const cols = 5, rows = Math.ceil(capacity / cols);
+    const cellW = 60, cellH = 60, gap = 6;
+    let cells = '';
+    for (let i = 0; i < capacity; i++) {
+      const r = Math.floor(i / cols), c = i % cols;
+      const x = c * (cellW + gap), y = r * (cellH + gap);
+      const filled = i < count;
+      cells += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" rx="10" fill="${filled ? '#5B3FF2' : '#fff'}" stroke="#5B3FF2" stroke-width="3"/>`;
+      if (filled) cells += `<circle cx="${x + cellW / 2}" cy="${y + cellH / 2}" r="16" fill="#FFB020"/>`;
+    }
+    const w = cols * (cellW + gap), h = rows * (cellH + gap);
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;max-width:340px;height:auto;">${cells}</svg>`;
+  }
+
+  function svgClock(hour, minute) {
+    const cx = 100, cy = 100, r = 90;
+    let ticks = '';
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * 2 * Math.PI - Math.PI / 2;
+      const x1 = cx + Math.cos(a) * (r - 10), y1 = cy + Math.sin(a) * (r - 10);
+      const x2 = cx + Math.cos(a) * (r - 2), y2 = cy + Math.sin(a) * (r - 2);
+      ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#26264D" stroke-width="3"/>`;
+    }
+    const hourAngle = ((hour % 12) + minute / 60) / 12 * 2 * Math.PI - Math.PI / 2;
+    const minAngle = (minute / 60) * 2 * Math.PI - Math.PI / 2;
+    const hx = cx + Math.cos(hourAngle) * (r * 0.5), hy = cy + Math.sin(hourAngle) * (r * 0.5);
+    const mx = cx + Math.cos(minAngle) * (r * 0.75), my = cy + Math.sin(minAngle) * (r * 0.75);
+    return `<svg viewBox="0 0 200 200" style="width:220px;height:220px;">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="#5B3FF2" stroke-width="5"/>
+      ${ticks}
+      <line x1="${cx}" y1="${cy}" x2="${hx}" y2="${hy}" stroke="#26264D" stroke-width="7" stroke-linecap="round"/>
+      <line x1="${cx}" y1="${cy}" x2="${mx}" y2="${my}" stroke="#5B3FF2" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="${cx}" cy="${cy}" r="6" fill="#26264D"/>
+    </svg>`;
+  }
+
+  const GENERATORS = {
+    'add-within-10': (p) => {
+      const max = p.max || 10;
+      const a = Util.randInt(0, max - 1); const b = Util.randInt(0, max - a);
+      const answer = a + b;
+      return { prompt: `${a} + ${b} = ?`, answer, useChoices: p.choices !== false, choiceSpread: 3 };
+    },
+    'add-within-20': (p) => {
+      const max = p.max || 20;
+      const a = Util.randInt(0, max - 1); const b = Util.randInt(0, max - a);
+      const answer = a + b;
+      return { prompt: `${a} + ${b} = ?`, answer, useChoices: p.choices !== false, choiceSpread: 4 };
+    },
+    'add-carrying': (p) => {
+      const digits = p.digits || 2;
+      const lo = digits === 3 ? 100 : 10, hi = digits === 3 ? 899 : 89;
+      let a, b, sum, carried;
+      do {
+        a = Util.randInt(lo, hi); b = Util.randInt(lo, hi);
+        sum = a + b;
+        carried = (a % 10) + (b % 10) >= 10;
+      } while (!carried);
+      return { prompt: `${a} + ${b} = ?`, answer: sum, useChoices: false };
+    },
+    'sub-within-10': (p) => {
+      const max = p.max || 10;
+      const a = Util.randInt(0, max); const b = Util.randInt(0, a);
+      return { prompt: `${a} − ${b} = ?`, answer: a - b, useChoices: p.choices !== false, choiceSpread: 3 };
+    },
+    'sub-within-20': (p) => {
+      const max = p.max || 20;
+      const a = Util.randInt(0, max); const b = Util.randInt(0, a);
+      return { prompt: `${a} − ${b} = ?`, answer: a - b, useChoices: p.choices !== false, choiceSpread: 4 };
+    },
+    'sub-borrowing': (p) => {
+      const digits = p.digits || 2;
+      const lo = digits === 3 ? 100 : 10, hi = digits === 3 ? 899 : 89;
+      let a, b, borrowed;
+      do {
+        a = Util.randInt(lo, hi); b = Util.randInt(lo, a);
+        borrowed = (a % 10) < (b % 10);
+      } while (!borrowed);
+      return { prompt: `${a} − ${b} = ?`, answer: a - b, useChoices: false };
+    },
+    'picture-counting': (p) => {
+      const max = p.max || 12;
+      const count = Util.randInt(3, max);
+      const emoji = Util.pick(OBJECT_EMOJI);
+      return { prompt: 'How many do you count?', visual: `<div class="emoji-row" style="max-width:340px;">${emoji.repeat(count)}</div>`, answer: count, useChoices: true, choiceSpread: 3 };
+    },
+    'object-counting': (p) => {
+      const max = p.max || 15;
+      const count = Util.randInt(3, max);
+      const emoji = Util.pick(OBJECT_EMOJI);
+      return { prompt: 'Count the objects:', visual: `<div class="emoji-row" style="max-width:340px;">${emoji.repeat(count)}</div>`, answer: count, useChoices: true, choiceSpread: 3 };
+    },
+    'number-line': (p) => {
+      const max = p.max || 20;
+      const target = Util.randInt(1, max - 1);
+      return { prompt: 'What number is marked?', visual: svgNumberLine(max, target), answer: target, useChoices: true, choiceSpread: 3 };
+    },
+    'missing-number': (p) => {
+      const max = p.max || 20;
+      const start = Util.randInt(0, Math.max(0, max - 5));
+      const seq = [start, start + 1, start + 2, start + 3, start + 4];
+      const hideIdx = Util.randInt(0, 4);
+      const answer = seq[hideIdx];
+      const display = seq.map((n, i) => i === hideIdx ? '__' : n).join(', ');
+      return { prompt: `Fill in the blank: ${display}`, answer, useChoices: true, choiceSpread: 2 };
+    },
+    'ten-frames': (p) => {
+      const max = p.max || 10;
+      const capacity = max <= 10 ? 10 : 20;
+      const count = Util.randInt(1, max);
+      return { prompt: 'How many dots?', visual: svgTenFrame(count, capacity), answer: count, useChoices: true, choiceSpread: 3 };
+    },
+    'base-ten-blocks': (p) => {
+      const max = p.max || 50;
+      const value = Util.randInt(11, max);
+      const tens = Math.floor(value / 10), ones = value % 10;
+      const visual = `<div class="row wrap center" style="max-width:360px;gap:14px;">
+        ${Array.from({length: tens}).map(() => `<div style="width:20px;height:80px;background:#5B3FF2;border-radius:6px;"></div>`).join('')}
+        ${Array.from({length: ones}).map(() => `<div style="width:20px;height:20px;background:#FFB020;border-radius:5px;"></div>`).join('')}
+      </div><p class="muted">${tens} ten block${tens===1?'':'s'} + ${ones} one${ones===1?'':'s'}</p>`;
+      return { prompt: 'What number is shown?', visual, answer: value, useChoices: true, choiceSpread: 5 };
+    },
+    'story-problems': (p) => {
+      const max = p.max || 10;
+      const templates = [
+        (a,b,name,item) => ({ text: `${name} has ${a} ${item}. ${name} gets ${b} more. How many ${item} now?`, ans: a + b }),
+        (a,b,name,item) => ({ text: `${name} has ${a} ${item} and gives away ${b}. How many are left?`, ans: Math.max(0, a - b) }),
+      ];
+      const names = ['Mia', 'Sam', 'Leo', 'Ava', 'Max'];
+      const items = ['stickers', 'apples', 'balloons', 'marbles', 'crayons'];
+      const a = Util.randInt(2, max), b = Util.randInt(1, Math.min(max, a));
+      const t = Util.pick(templates)(a, b, Util.pick(names), Util.pick(items));
+      return { prompt: t.text, answer: t.ans, useChoices: false };
+    },
+    'greater-less': (p) => {
+      const max = p.max || 50;
+      let a = Util.randInt(0, max), b = Util.randInt(0, max);
+      while (a === b) b = Util.randInt(0, max);
+      const answer = a > b ? '>' : '<';
+      return { prompt: `${a}   ?   ${b}`, answer, useChoices: true, customChoices: ['>', '<'] };
+    },
+    'even-odd': (p) => {
+      const max = p.max || 20;
+      const n = Util.randInt(1, max);
+      const answer = n % 2 === 0 ? 'Even' : 'Odd';
+      return { prompt: `Is ${n} even or odd?`, answer, useChoices: true, customChoices: ['Even', 'Odd'] };
+    },
+    'skip-counting': (p) => {
+      const step = p.step || 2;
+      const start = step * Util.randInt(0, 5);
+      const seq = Array.from({length: 4}, (_, i) => start + i * step);
+      const answer = start + 4 * step;
+      return { prompt: `${seq.join(', ')}, ?`, answer, useChoices: true, choiceSpread: step };
+    },
+    'patterns': (p) => {
+      const length = p.length || 5;
+      const shapes = ['🔴', '🔵', '🟡'];
+      const unit = Util.shuffle(shapes).slice(0, 2);
+      const seq = Array.from({length}, (_, i) => unit[i % 2]);
+      const answer = unit[length % 2];
+      return { prompt: `What comes next? ${seq.join(' ')} ?`, answer, useChoices: true, customChoices: Util.shuffle(shapes) };
+    },
+    'clock-reading': (p) => {
+      const hour = Util.randInt(1, 12);
+      const minute = p.halfHours === false ? 0 : Util.pick([0, 30]);
+      const answer = `${hour}:${minute === 0 ? '00' : '30'}`;
+      const wrongHours = Util.shuffle([1,2,3,4,5,6,7,8,9,10,11,12].filter(h => h !== hour)).slice(0, 3);
+      const choices = Util.shuffle([answer, ...wrongHours.map(h => `${h}:${minute===0?'00':'30'}`)]);
+      return { prompt: 'What time is it?', visual: svgClock(hour, minute), answer, useChoices: true, customChoices: choices };
+    },
+    'money': (p) => {
+      const maxCents = p.maxCents || 100;
+      const coinVals = [1, 5, 10, 25];
+      const coinNames = { 1: '1¢', 5: '5¢', 10: '10¢', 25: '25¢' };
+      let total = 0, coins = [];
+      while (total < maxCents && coins.length < 6) {
+        const v = Util.pick(coinVals);
+        if (total + v > maxCents) break;
+        total += v; coins.push(v);
+      }
+      if (coins.length === 0) { coins = [10]; total = 10; }
+      const visual = `<div class="row wrap center" style="max-width:340px;">` +
+        coins.map(v => `<div class="pill" style="font-size:16px;">${coinNames[v]}</div>`).join('') + `</div>`;
+      return { prompt: 'How many cents in total?', visual, answer: total, useChoices: true, choiceSpread: 10 };
+    },
+    'measurement': (p) => {
+      const maxInches = p.maxInches || 12;
+      const len = Util.randInt(2, maxInches);
+      const pxPerIn = 24;
+      const visual = `<svg viewBox="0 0 ${len*pxPerIn+40} 60" style="width:100%;max-width:400px;">
+        <rect x="20" y="20" width="${len*pxPerIn}" height="20" fill="#5B3FF2" rx="4"/>
+        ${Array.from({length: len+1}).map((_,i)=>`<line x1="${20+i*pxPerIn}" y1="42" x2="${20+i*pxPerIn}" y2="50" stroke="#26264D" stroke-width="2"/>`).join('')}
+      </svg>`;
+      return { prompt: 'How many inches long is the bar?', visual, answer: len, useChoices: true, choiceSpread: 2 };
+    },
+  };
+
+  async function generate(catId, params) {
+    const gen = GENERATORS[catId];
+    if (!gen) return null;
+    const raw = await gen(params || {});
+    let choices = null;
+    if (raw.useChoices) {
+      choices = raw.customChoices ? Util.shuffle(raw.customChoices) : makeChoices(Number(raw.answer), raw.choiceSpread || 3);
+    }
+    return {
+      id: Util.uid('prob'),
+      category: catId,
+      prompt: raw.prompt,
+      visual: raw.visual || null,
+      answer: String(raw.answer),
+      type: choices ? 'choice' : 'input',
+      choices,
+    };
+  }
+
+  return { generate, defaultParams, makeChoices };
+})();
+</script>
+<script>
+/* ============================================================
+   COIN SYSTEM
+   ============================================================ */
+const CoinSystem = (() => {
+  let balance = 0;
+  async function load() {
+    balance = (await Storage.get('coins', 'balance')) || 0;
+    render();
+  }
+  function render() {
+    document.getElementById('coinCount').textContent = balance;
+    document.getElementById('coinCountProblem').textContent = balance;
+  }
+  async function add(n) {
+    balance += n;
+    await Storage.set('coins', 'balance', balance);
+    render();
+  }
+  async function spend(n) {
+    if (balance < n) return false;
+    balance -= n;
+    await Storage.set('coins', 'balance', balance);
+    render();
+    return true;
+  }
+  function get() { return balance; }
+  return { load, add, spend, get };
+})();
+
+/* ============================================================
+   ANALYTICS
+   Tracks per-category attempts/correct + daily activity + coin history
+   ============================================================ */
+const Analytics = (() => {
+  const STREAK_MILESTONES = [10, 25, 50, 100];
+  async function record(catId, correct) {
+    const key = 'cat_' + catId;
+    const rec = (await Storage.get('analytics', key)) || { attempts: 0, correct: 0, streak: 0, bestStreak: 0 };
+    rec.attempts++;
+    if (correct) {
+      rec.correct++; rec.streak++;
+      if (rec.streak > rec.bestStreak) {
+        rec.bestStreak = rec.streak;
+        if (STREAK_MILESTONES.includes(rec.streak)) {
+          const cat = categoryById(catId);
+          const s = await Settings.get();
+          NotificationCenter.log('streak', `New best streak! 🔥 ${rec.streak} in a row`,
+            `${s.kidName} just hit a ${rec.streak}-answer streak in ${cat ? cat.name : catId}.`);
+        }
+      }
+    } else rec.streak = 0;
+    await Storage.set('analytics', key, rec);
+
+    const today = new Date().toISOString().slice(0, 10);
+    const daily = (await Storage.get('analytics', 'daily_' + today)) || { attempts: 0, correct: 0 };
+    daily.attempts++; if (correct) daily.correct++;
+    await Storage.set('analytics', 'daily_' + today, daily);
+
+    // mastery: rolling accuracy determines a 0-3 star level
+    const acc = rec.attempts >= 5 ? rec.correct / rec.attempts : null;
+    let stars = 0;
+    if (acc != null) { if (acc >= 0.9) stars = 3; else if (acc >= 0.75) stars = 2; else if (acc >= 0.5) stars = 1; }
+    const prevMastery = await Storage.get('mastery', catId);
+    await Storage.set('mastery', catId, { stars, accuracy: acc });
+    // Gentle heads-up once per category the first time accuracy dips low,
+    // so a parent can decide whether to ease the difficulty back.
+    if (acc != null && acc < 0.5 && rec.attempts % 10 === 0 && (!prevMastery || prevMastery.accuracy == null || prevMastery.accuracy >= 0.5)) {
+      const cat = categoryById(catId);
+      const s = await Settings.get();
+      NotificationCenter.log('struggle', `${s.kidName} might need a hand`,
+        `Accuracy on ${cat ? cat.name : catId} is at ${Math.round(acc * 100)}% over the last ${rec.attempts} tries.`);
+    }
+  }
+  async function getCategoryStats(catId) {
+    return (await Storage.get('analytics', 'cat_' + catId)) || { attempts: 0, correct: 0, streak: 0, bestStreak: 0 };
+  }
+  async function getAllCategoryStats() {
+    const out = {};
+    for (const c of CATEGORIES) out[c.id] = await getCategoryStats(c.id);
+    return out;
+  }
+  async function getMastery(catId) {
+    return (await Storage.get('mastery', catId)) || { stars: 0, accuracy: null };
+  }
+  async function getRecentDays(n) {
+    const days = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const rec = (await Storage.get('analytics', 'daily_' + key)) || { attempts: 0, correct: 0 };
+      days.push({ date: key, ...rec });
+    }
+    return days;
+  }
+  return { record, getCategoryStats, getAllCategoryStats, getMastery, getRecentDays };
+})();
+
+/* ============================================================
+   PROBLEM ENGINE
+   Renders a single problem into #problemStage and handles input.
+   Supports: multiple-choice (tap) and numeric keypad input.
+   ============================================================ */
+const ProblemEngine = (() => {
+  let onResult = null; // callback(correct, problem)
+
+  function renderChoice(problem) {
+    const stage = document.getElementById('problemStage');
+    stage.innerHTML = `
+      <div class="problem-prompt">${problem.prompt}</div>
+      ${problem.visual ? `<div>${problem.visual}</div>` : ''}
+      <div class="choices" id="choicesWrap"></div>
+    `;
+    const wrap = document.getElementById('choicesWrap');
+    problem.choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = choice;
+      btn.onclick = () => handleAnswer(problem, choice, btn, wrap);
+      wrap.appendChild(btn);
+    });
+  }
+
+  function renderInput(problem) {
+    const stage = document.getElementById('problemStage');
+    stage.innerHTML = `
+      <div class="problem-prompt">${problem.prompt}</div>
+      ${problem.visual ? `<div>${problem.visual}</div>` : ''}
+      <div class="answer-display" id="answerDisplay">&nbsp;</div>
+      <div class="numpad" id="numpad"></div>
+    `;
+    let current = '';
+    const display = document.getElementById('answerDisplay');
+    const pad = document.getElementById('numpad');
+    const keys = ['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
+    keys.forEach(k => {
+      const btn = document.createElement('button');
+      btn.textContent = k;
+      btn.onclick = () => {
+        if (k === '⌫') { current = current.slice(0, -1); }
+        else if (k === '✓') { if (current !== '') handleAnswer(problem, current, null, null); return; }
+        else if (current.length < 6) { current += k; }
+        display.textContent = current || '\u00A0';
+      };
+      pad.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(problem, given, btnEl, wrapEl) {
+    const correct = String(given).trim().toLowerCase() === String(problem.answer).trim().toLowerCase();
+    Util.vibrate(correct ? 15 : [10, 40, 10]);
+    if (wrapEl) {
+      [...wrapEl.children].forEach(c => {
+        if (c.textContent === String(problem.answer)) c.classList.add('correct');
+        else if (c === btnEl && !correct) c.classList.add('wrong');
+        c.disabled = true;
+      });
+    } else {
+      const display = document.getElementById('answerDisplay');
+      display.style.borderColor = correct ? 'var(--good)' : 'var(--bad)';
+    }
+    Util.toast(correct ? ['Great job! 🎉','Awesome! ⭐','You got it! 🙌','Nice work! 👏'][Util.randInt(0,3)] : `Answer: ${problem.answer}`, 1200);
+    setTimeout(() => onResult && onResult(correct, problem), 700);
+  }
+
+  function render(problem, resultCallback) {
+    onResult = resultCallback;
+    if (problem.type === 'choice') renderChoice(problem);
+    else renderInput(problem);
+  }
+
+  return { render };
+})();
+</script>
+<script>
+/* ============================================================
+   LESSON ENGINE
+   A lesson is an ordered set of {categoryId, params, count}
+   ============================================================ */
+const LessonEngine = (() => {
+  async function all() { return await Storage.all('lessons'); }
+  async function save(lesson) {
+    if (!lesson.id) lesson.id = Util.uid('lsn');
+    await Storage.set('lessons', lesson.id, lesson);
+    return lesson;
+  }
+  async function remove(id) { await Storage.del('lessons', id); }
+  async function get(id) { return await Storage.get('lessons', id); }
+
+  async function buildQueue(lesson) {
+    const queue = [];
+    for (const block of lesson.blocks) {
+      for (let i = 0; i < (block.count || 5); i++) {
+        queue.push({ categoryId: block.categoryId, params: block.params || {} });
+      }
+    }
+    return Util.shuffle(queue);
+  }
+
+  return { all, save, remove, get, buildQueue };
+})();
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+const Nav = (() => {
+  let current = 'view-kid-home';
+  function go(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    current = viewId;
+  }
+  function get() { return current; }
+  return { go, get };
+})();
+
+/* ============================================================
+   RUNNER — drives a practice session (single category or lesson)
+   ============================================================ */
+const Runner = (() => {
+  let queue = [];
+  let idx = 0;
+  let correctCount = 0;
+  let coinsEarned = 0;
+  let sessionLabel = '';
+
+  async function startCategory(catId, count) {
+    const custom = await Storage.get('problems', 'params_' + catId);
+    const params = custom || ProblemGenerator.defaultParams(catId);
+    queue = Array.from({ length: count || 8 }, () => ({ categoryId: catId, params }));
+    idx = 0; correctCount = 0; coinsEarned = 0;
+    sessionLabel = categoryById(catId).name;
+    Nav.go('view-problem');
+    await next();
+  }
+
+  async function startLesson(lesson) {
+    queue = await LessonEngine.buildQueue(lesson);
+    idx = 0; correctCount = 0; coinsEarned = 0;
+    sessionLabel = lesson.name;
+    Nav.go('view-problem');
+    await next();
+  }
+
+  async function next() {
+    if (idx >= queue.length) return finish();
+    const item = queue[idx];
+    document.getElementById('problemProgressFill').style.width = `${Math.round((idx / queue.length) * 100)}%`;
+    const problem = await ProblemGenerator.generate(item.categoryId, item.params);
+    ProblemEngine.render(problem, async (correct) => {
+      await Analytics.record(item.categoryId, correct);
+      if (correct) {
+        correctCount++;
+        const settings = await Settings.get();
+        const reward = settings.coinsPerCorrect || 2;
+        coinsEarned += reward;
+        await CoinSystem.add(reward);
+      }
+      idx++;
+      next();
+    });
+  }
+
+  async function finish() {
+    document.getElementById('problemProgressFill').style.width = '100%';
+    document.getElementById('completeSummary').textContent = `${sessionLabel} — ${queue.length} question${queue.length===1?'':'s'}`;
+    document.getElementById('completeCorrect').textContent = `${correctCount}/${queue.length}`;
+    document.getElementById('completeCoins').textContent = coinsEarned;
+    Nav.go('view-complete');
+    const s = await Settings.get();
+    const pct = queue.length ? Math.round((correctCount / queue.length) * 100) : 0;
+    await NotificationCenter.log('session', `${s.kidName} finished "${sessionLabel}"`,
+      `${correctCount}/${queue.length} correct (${pct}%) · +${coinsEarned} coins`, { pct });
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const goalHit = (await Storage.get('progress', 'goal_notified_' + todayKey));
+    const daily = (await Storage.get('analytics', 'daily_' + todayKey)) || { attempts: 0, correct: 0 };
+    if (!goalHit && s.dailyGoal && daily.attempts >= s.dailyGoal) {
+      await Storage.set('progress', 'goal_notified_' + todayKey, true);
+      await NotificationCenter.log('goal', `${s.kidName} hit today's goal! 🎯`,
+        `${daily.attempts} problems done today — goal was ${s.dailyGoal}.`);
+    }
+  }
+
+  function exit() { Nav.go('view-kid-home'); }
+
+  return { startCategory, startLesson, exit };
+})();
+
+/* ============================================================
+   KID INTERFACE
+   ============================================================ */
+const KidUI = (() => {
+  async function renderHome() {
+    const s = await Settings.get();
+    document.getElementById('kidGreeting').textContent = `Hi, ${s.kidName}! ${s.avatarEmoji || '👋'}`;
+    document.getElementById('logoTap').textContent = s.avatarEmoji ? s.avatarEmoji : '+';
+    document.getElementById('logoTap').style.background = s.avatarColor || 'var(--purple)';
+    if (s.dailyGoal) {
+      const today = new Date().toISOString().slice(0, 10);
+      const daily = (await Storage.get('analytics', 'daily_' + today)) || { attempts: 0 };
+      const pct = Util.clamp(Math.round((daily.attempts / s.dailyGoal) * 100), 0, 100);
+      let goalEl = document.getElementById('dailyGoalBanner');
+      if (!goalEl) {
+        goalEl = document.createElement('div');
+        goalEl.id = 'dailyGoalBanner';
+        goalEl.className = 'card';
+        goalEl.style.marginBottom = '18px';
+        document.getElementById('lessonRow').insertAdjacentElement('beforebegin', goalEl);
+      }
+      goalEl.innerHTML = `<div class="row between"><span>Today's goal</span><strong>${daily.attempts}/${s.dailyGoal}</strong></div>
+        <div style="height:8px;background:var(--line);border-radius:5px;margin-top:8px;"><div style="height:100%;width:${pct}%;background:var(--teal);border-radius:5px;"></div></div>`;
+    }
+    const grid = document.getElementById('categoryGrid');
+    grid.innerHTML = '';
+    for (const cat of CATEGORIES) {
+      const mastery = await Analytics.getMastery(cat.id);
+      const stars = '⭐'.repeat(mastery.stars) + '☆'.repeat(3 - mastery.stars);
+      const tile = document.createElement('button');
+      tile.className = 'cat-tile';
+      tile.style.background = cat.color;
+      tile.innerHTML = `<div class="emoji">${cat.emoji}</div><div><div class="name">${cat.name}</div><div style="font-size:12px;opacity:0.85;">${stars}</div></div>`;
+      tile.onclick = () => Runner.startCategory(cat.id, s.sessionLength || 8);
+      grid.appendChild(tile);
+    }
+    const lessonRow = document.getElementById('lessonRow');
+    const lessons = await LessonEngine.all();
+    lessonRow.innerHTML = '';
+    if (!lessons.length) {
+      lessonRow.innerHTML = `<p class="muted">No lessons yet — a grown-up can build one in the Parent Dashboard.</p>`;
+    } else {
+      lessons.forEach(lsn => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-secondary';
+        btn.textContent = '📚 ' + lsn.name;
+        btn.onclick = () => Runner.startLesson(lsn);
+        lessonRow.appendChild(btn);
+      });
+    }
+  }
+  return { renderHome };
+})();
+</script>
+<script>
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+const Settings = (() => {
+  const DEFAULTS = {
+    coinsPerCorrect: 2, streakBonus: 5, sound: true, kidName: 'Math Star', avatarColor: '#5B3FF2',
+    avatarEmoji: '🦸', themeColor: '#5B3FF2', dailyGoal: 10, sessionLength: 8,
+    celebrationStyle: 'confetti', screenTimeLimitMin: 0, autoDifficulty: false, weeklyReportOptIn: false,
+  };
+  async function get() {
+    const s = await Storage.get('settings', 'app');
+    return Object.assign({}, DEFAULTS, s || {});
+  }
+  async function save(patch) {
+    const cur = await get();
+    const next = Object.assign({}, cur, patch);
+    await Storage.set('settings', 'app', next);
+    applyTheme(next);
+    return next;
+  }
+  function applyTheme(s) {
+    if (s && s.themeColor) document.documentElement.style.setProperty('--purple', s.themeColor);
+  }
+  return { get, save, applyTheme, DEFAULTS };
+})();
+
+/* ============================================================
+   PARENT PIN / GATE
+   Secret gesture: 5 taps on the logo within 2s, OR a long-press (700ms).
+   ============================================================ */
+const PinGate = (() => {
+  let tapCount = 0, tapTimer = null, pressTimer = null;
+  let entry = '';
+  let mode = 'check'; // 'check' | 'create'
+  let onSuccess = null;
+
+  async function hasPin() { return !!(await Storage.get('pin', 'value')); }
+
+  function attachGesture() {
+    const logo = document.getElementById('logoTap');
+    logo.addEventListener('click', () => {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+      if (tapCount >= 5) { tapCount = 0; open(); }
+    });
+    logo.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => open(), 700);
+    }, { passive: true });
+    ['touchend', 'touchmove', 'touchcancel'].forEach(ev =>
+      logo.addEventListener(ev, () => clearTimeout(pressTimer)));
+  }
+
+  async function open(cb) {
+    onSuccess = cb || (() => { Nav.go('view-parent'); ParentUI.renderTabs(); });
+    mode = (await hasPin()) ? 'check' : 'create';
+    entry = '';
+    renderPad();
+    document.getElementById('pinTitle').textContent = mode === 'create' ? 'Create a Parent PIN' : 'Enter Parent PIN';
+    document.getElementById('pinSubtitle').textContent = mode === 'create' ? 'Choose a 4-digit PIN grown-ups will remember' : 'Grown-ups only';
+    document.getElementById('pinError').textContent = '';
+    updateDots();
+    Nav.go('view-pin');
+  }
+
+  function renderPad() {
+    const pad = document.getElementById('pinPad');
+    pad.innerHTML = '';
+    ['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(k => {
+      const btn = document.createElement('button');
+      btn.textContent = k;
+      if (!k) { btn.style.visibility = 'hidden'; }
+      else btn.onclick = () => onKey(k);
+      pad.appendChild(btn);
+    });
+  }
+
+  function updateDots() {
+    const dots = document.getElementById('pinDots');
+    dots.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+      const d = document.createElement('div');
+      d.className = 'pin-dot' + (i < entry.length ? ' filled' : '');
+      dots.appendChild(d);
+    }
+  }
+
+  async function onKey(k) {
+    if (k === '⌫') { entry = entry.slice(0, -1); updateDots(); return; }
+    if (entry.length >= 4) return;
+    entry += k;
+    updateDots();
+    if (entry.length === 4) {
+      if (mode === 'create') {
+        await Storage.set('pin', 'value', entry);
+        Util.toast('Parent PIN set!');
+        onSuccess && onSuccess();
+      } else {
+        const real = await Storage.get('pin', 'value');
+        if (entry === real) {
+          onSuccess && onSuccess();
+        } else {
+          document.getElementById('pinError').textContent = 'Incorrect PIN, try again';
+          Util.vibrate([10, 40, 10]);
+          entry = '';
+          setTimeout(updateDots, 100);
+        }
+      }
+    }
+  }
+
+  function init() {
+    attachGesture();
+    document.getElementById('pinBackBtn').onclick = () => Nav.go('view-kid-home');
+  }
+
+  return { init, open, hasPin };
+})();
+</script>
+<script>
+/* ============================================================
+   MODAL HELPER
+   ============================================================ */
+const Modal = (() => {
+  function open(html) {
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalBackdrop').classList.add('active');
+  }
+  function close() { document.getElementById('modalBackdrop').classList.remove('active'); }
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+      if (e.target.id === 'modalBackdrop') close();
+    });
+  });
+  return { open, close };
+})();
+
+/* ============================================================
+   PARENT DASHBOARD
+   Tabs: Lessons, Problems, Analytics, Coins, Customization,
+         Settings, Data (Import/Export/Reset)
+   ============================================================ */
+const ParentUI = (() => {
+  const TABS = [
+    { id: 'lessons', label: '📚 Lessons' },
+    { id: 'problems', label: '✏️ Problems' },
+    { id: 'analytics', label: '📊 Analytics' },
+    { id: 'coins', label: '🪙 Coins' },
+    { id: 'custom', label: '🎨 Customization' },
+    { id: 'family', label: '👪 Family' },
+    { id: 'notifications', label: '🔔 Notifications' },
+    { id: 'settings', label: '⚙️ Settings' },
+    { id: 'data', label: '💾 Data' },
+  ];
+  let activeTab = 'lessons';
+
+  function renderTabs() {
+    const bar = document.getElementById('parentTabs');
+    bar.innerHTML = '';
+    TABS.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn' + (t.id === activeTab ? ' active' : '');
+      btn.textContent = t.label;
+      btn.onclick = () => { activeTab = t.id; renderTabs(); renderContent(); };
+      bar.appendChild(btn);
+    });
+    renderContent();
+  }
+
+  async function renderContent() {
+    const el = document.getElementById('parentContent');
+    el.innerHTML = '<p class="muted">Loading…</p>';
+    const renderers = {
+      lessons: renderLessons, problems: renderProblems, analytics: renderAnalytics,
+      coins: renderCoins, custom: renderCustomization,
+      family: renderFamily, notifications: renderNotifications,
+      settings: renderSettings, data: renderData,
+    };
+    await renderers[activeTab](el);
+    refreshSyncStatus();
+  }
+
+  function refreshIfNotifTab() { if (activeTab === 'notifications') renderContent(); }
+
+  async function refreshSyncStatus() {
+    const dot = document.getElementById('syncDot');
+    const text = document.getElementById('syncStatusText');
+    if (!dot || !text) return;
+    if (CloudSync.isActive()) {
+      dot.classList.remove('off');
+      const t = CloudSync.getLastSyncedAt();
+      text.textContent = 'Synced across devices' + (t ? ' · last update ' + new Date(t).toLocaleTimeString() : '');
+    } else {
+      dot.classList.add('off');
+      text.textContent = 'Local only — sign in under Family to sync across devices';
+    }
+  }
+
+  /* ---------- LESSONS TAB ---------- */
+  async function renderLessons(el) {
+    const lessons = await LessonEngine.all();
+    el.innerHTML = `
+      <div class="row between" style="margin-bottom:14px;">
+        <h3>Lessons</h3>
+        <button class="btn btn-primary" id="newLessonBtn">+ New Lesson</button>
+      </div>
+      <div class="col" id="lessonList"></div>
+    `;
+    const list = document.getElementById('lessonList');
+    if (!lessons.length) list.innerHTML = `<div class="empty-state">No lessons yet. Build one from problem categories.</div>`;
+    lessons.forEach(lsn => {
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      const total = (lsn.blocks || []).reduce((s, b) => s + (b.count || 0), 0);
+      row.innerHTML = `<div><strong>${Util.escapeHtml(lsn.name)}</strong><div class="muted">${(lsn.blocks||[]).length} topics · ${total} questions</div></div>`;
+      const actions = document.createElement('div'); actions.className = 'row';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn btn-secondary'; editBtn.textContent = 'Edit';
+      editBtn.onclick = () => openLessonEditor(lsn);
+      const delBtn = document.createElement('button'); delBtn.className = 'btn btn-danger'; delBtn.textContent = 'Delete';
+      delBtn.onclick = async () => { await LessonEngine.remove(lsn.id); renderContent(); };
+      actions.appendChild(editBtn); actions.appendChild(delBtn);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+    document.getElementById('newLessonBtn').onclick = () => openLessonEditor({ name: 'New Lesson', blocks: [] });
+  }
+
+  function openLessonEditor(lesson) {
+    const blocks = (lesson.blocks || []).slice();
+    function blockRow(b, i) {
+      const cat = categoryById(b.categoryId);
+      return `<div class="list-row" data-idx="${i}">
+        <div>${cat ? cat.emoji + ' ' + cat.name : b.categoryId}</div>
+        <div class="row">
+          <input type="number" min="1" max="30" value="${b.count}" data-count-idx="${i}" style="width:70px;">
+          <button data-remove-idx="${i}" class="btn btn-danger" style="padding:8px 12px;">✕</button>
+        </div>
+      </div>`;
+    }
+    function draw() {
+      Modal.open(`
+        <h3>Edit Lesson</h3>
+        <label class="field" style="margin:12px 0;">Lesson name
+          <input type="text" id="lessonName" value="${Util.escapeHtml(lesson.name || '')}">
+        </label>
+        <div class="col" id="blockList">${blocks.map(blockRow).join('') || '<p class="muted">Add topics below.</p>'}</div>
+        <div class="row" style="margin:14px 0;">
+          <select id="addCatSelect" style="flex:1;">${CATEGORIES.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('')}</select>
+          <button class="btn btn-secondary" id="addBlockBtn">+ Add</button>
+        </div>
+        <div class="row" style="margin-top:16px;">
+          <button class="btn btn-ghost btn-block" id="cancelLessonBtn">Cancel</button>
+          <button class="btn btn-primary btn-block" id="saveLessonBtn">Save Lesson</button>
+        </div>
+      `);
+      document.getElementById('addBlockBtn').onclick = () => {
+        const catId = document.getElementById('addCatSelect').value;
+        blocks.push({ categoryId: catId, count: 5, params: ProblemGenerator.defaultParams(catId) });
+        draw();
+      };
+      document.querySelectorAll('[data-remove-idx]').forEach(b => b.onclick = () => { blocks.splice(+b.dataset.removeIdx, 1); draw(); });
+      document.querySelectorAll('[data-count-idx]').forEach(inp => inp.onchange = () => { blocks[+inp.dataset.countIdx].count = Util.clamp(+inp.value || 1, 1, 30); });
+      document.getElementById('cancelLessonBtn').onclick = Modal.close;
+      document.getElementById('saveLessonBtn').onclick = async () => {
+        lesson.name = document.getElementById('lessonName').value.trim() || 'Lesson';
+        lesson.blocks = blocks;
+        await LessonEngine.save(lesson);
+        Modal.close();
+        renderContent();
+        Util.toast('Lesson saved');
+      };
+    }
+    draw();
+  }
+
+  /* ---------- PROBLEMS TAB (template params + duplicate/custom) ---------- */
+  async function renderProblems(el) {
+    el.innerHTML = `<h3 style="margin-bottom:10px;">Problem Templates</h3>
+      <p class="muted" style="margin-bottom:14px;">Every built-in template is editable — adjust the settings and kids get new problems generated from them. Duplicate a template to make a customized copy.</p>
+      <div class="col" id="tplList"></div>`;
+    const list = document.getElementById('tplList');
+    for (const cat of CATEGORIES) {
+      const customParams = await Storage.get('problems', 'params_' + cat.id);
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      row.innerHTML = `<div>${cat.emoji} <strong>${cat.name}</strong>${customParams ? ' <span class="pill">customized</span>' : ''}</div>`;
+      const actions = document.createElement('div'); actions.className = 'row';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn btn-secondary'; editBtn.textContent = 'Edit';
+      editBtn.onclick = () => openTemplateEditor(cat);
+      const dupBtn = document.createElement('button'); dupBtn.className = 'btn btn-ghost'; dupBtn.textContent = 'Duplicate';
+      dupBtn.onclick = () => openTemplateEditor(cat, true);
+      actions.appendChild(editBtn); actions.appendChild(dupBtn);
+      row.appendChild(actions);
+      list.appendChild(row);
+    }
+  }
+
+  function schemaField(s, val) {
+    const value = val != null ? val : s.def;
+    if (s.type === 'range') {
+      return `<label class="field">${s.label}: <span data-out="${s.key}">${value}</span>
+        <input type="range" data-key="${s.key}" min="${s.min}" max="${s.max}" step="${s.step}" value="${value}"></label>`;
+    }
+    if (s.type === 'toggle') {
+      return `<div class="row between"><span>${s.label}</span>
+        <button type="button" class="toggle${value ? ' on' : ''}" data-toggle="${s.key}"><div class="knob"></div></button></div>`;
+    }
+    if (s.type === 'select') {
+      return `<label class="field">${s.label}
+        <select data-key="${s.key}">${s.options.map(o => `<option value="${o}" ${o==value?'selected':''}>${o}</option>`).join('')}</select></label>`;
+    }
+    return '';
+  }
+
+  function openTemplateEditor(cat, duplicate) {
+    let params = {};
+    (async () => {
+      const existing = await Storage.get('problems', 'params_' + cat.id);
+      params = Object.assign({}, ProblemGenerator.defaultParams(cat.id), existing || {});
+      draw();
+    })();
+    async function preview() {
+      const p = await ProblemGenerator.generate(cat.id, params);
+      document.getElementById('tplPreview').innerHTML = `<div class="problem-prompt" style="font-size:20px;">${p.prompt}</div>${p.visual||''}<p class="muted" style="margin-top:8px;">Answer: ${p.answer}</p>`;
+    }
+    function draw() {
+      Modal.open(`
+        <h3>${duplicate ? 'Duplicate & Customize' : 'Edit'}: ${cat.emoji} ${cat.name}</h3>
+        <div class="col" style="margin:14px 0;">${(cat.schema || []).map(s => schemaField(s, params[s.key])).join('')}</div>
+        <div class="card" style="background:var(--purple-light); text-align:center; padding:16px;" id="tplPreview"></div>
+        <div class="row" style="margin-top:16px;">
+          <button class="btn btn-ghost btn-block" id="resetTplBtn">Reset to Default</button>
+          <button class="btn btn-primary btn-block" id="saveTplBtn">Save</button>
+        </div>
+      `);
+      document.querySelectorAll('[data-key]').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const key = inp.dataset.key;
+          const num = inp.type === 'range' || inp.tagName === 'SELECT' ? Number(inp.value) : inp.value;
+          params[key] = isNaN(num) ? inp.value : num;
+          const out = document.querySelector(`[data-out="${key}"]`);
+          if (out) out.textContent = params[key];
+          preview();
+        });
+      });
+      document.querySelectorAll('[data-toggle]').forEach(btn => {
+        btn.onclick = () => {
+          const key = btn.dataset.toggle;
+          params[key] = !params[key];
+          btn.classList.toggle('on', params[key]);
+          preview();
+        };
+      });
+      document.getElementById('resetTplBtn').onclick = () => { params = ProblemGenerator.defaultParams(cat.id); draw(); };
+      document.getElementById('saveTplBtn').onclick = async () => {
+        await Storage.set('problems', 'params_' + cat.id, params);
+        Modal.close();
+        renderContent();
+        Util.toast('Template saved');
+      };
+      preview();
+    }
+  }
+
+  /* ---------- ANALYTICS TAB ---------- */
+  async function renderAnalytics(el) {
+    const stats = await Analytics.getAllCategoryStats();
+    const days7 = await Analytics.getRecentDays(7);
+    const days28 = await Analytics.getRecentDays(28);
+    const maxDay = Math.max(1, ...days7.map(d => d.attempts));
+    const maxHeat = Math.max(1, ...days28.map(d => d.attempts));
+
+    const totalAttempts = Object.values(stats).reduce((s, c) => s + c.attempts, 0);
+    const totalCorrect = Object.values(stats).reduce((s, c) => s + c.correct, 0);
+    const overallAcc = totalAttempts ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+    const bestStreakEver = Math.max(0, ...Object.values(stats).map(c => c.bestStreak));
+    // Current day-streak: consecutive days (ending today) with at least one attempt.
+    let dayStreak = 0;
+    for (let i = days28.length - 1; i >= 0; i--) { if (days28[i].attempts > 0) dayStreak++; else break; }
+    const sortedByAcc = CATEGORIES
+      .map(c => ({ c, s: stats[c.id] }))
+      .filter(x => x.s.attempts >= 5)
+      .sort((a, b) => (b.s.correct / b.s.attempts) - (a.s.correct / a.s.attempts));
+    const strongest = sortedByAcc[0];
+    const weakest = sortedByAcc[sortedByAcc.length - 1];
+
+    el.innerHTML = `
+      <h3 style="margin-bottom:10px;">Overview</h3>
+      <div class="grid grid-3" style="margin-bottom:18px;">
+        <div class="stat-card"><div class="big">${totalAttempts}</div><div class="lbl">Total answered</div></div>
+        <div class="stat-card"><div class="big">${overallAcc}%</div><div class="lbl">Overall accuracy</div></div>
+        <div class="stat-card"><div class="big">${dayStreak}🔥</div><div class="lbl">Day streak</div></div>
+        <div class="stat-card"><div class="big">${bestStreakEver}</div><div class="lbl">Best answer streak</div></div>
+        <div class="stat-card"><div class="big" style="font-size:15px;">${strongest ? strongest.c.emoji + ' ' + strongest.c.name : '—'}</div><div class="lbl">Strongest topic</div></div>
+        <div class="stat-card"><div class="big" style="font-size:15px;">${weakest ? weakest.c.emoji + ' ' + weakest.c.name : '—'}</div><div class="lbl">Needs practice</div></div>
+      </div>
+
+      <h3 style="margin-bottom:10px;">Last 7 Days</h3>
+      <div class="card row" style="align-items:flex-end; gap:10px; height:120px; margin-bottom:20px;">
+        ${days7.map(d => `<div class="col" style="align-items:center; flex:1;">
+            <div style="width:100%; background:var(--purple); border-radius:6px; height:${Math.max(4, (d.attempts/maxDay)*80)}px;"></div>
+            <div class="muted" style="font-size:11px;">${Util.fmtDate(d.date)}</div>
+          </div>`).join('')}
+      </div>
+
+      <h3 style="margin-bottom:10px;">Last 28 Days</h3>
+      <div class="card" style="margin-bottom:20px;">
+        <div class="heatmap">
+          ${days28.map(d => {
+            const t = d.attempts ? Util.clamp(d.attempts / maxHeat, 0.15, 1) : 0;
+            const bg = d.attempts ? `rgba(91,63,242,${t})` : 'var(--line)';
+            return `<div class="heat-cell" style="background:${bg};" title="${d.date}: ${d.attempts} attempts"></div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <h3 style="margin-bottom:10px;">By Topic</h3>
+      <div class="col">
+        ${CATEGORIES.map(c => {
+          const s = stats[c.id];
+          const pct = s.attempts ? Math.round((s.correct / s.attempts) * 100) : null;
+          return `<div class="list-row"><div style="flex:1;">${c.emoji} ${c.name}<div class="muted">${s.attempts} attempts${pct!=null ? ' · ' + pct + '% correct' : ''}</div>
+              ${pct!=null ? `<div style="height:6px;background:var(--line);border-radius:4px;margin-top:6px;"><div style="height:100%;width:${pct}%;background:${pct>=75?'var(--good)':pct>=50?'var(--amber)':'var(--bad)'};border-radius:4px;"></div></div>` : ''}
+            </div>
+            <div class="pill">🔥 ${s.bestStreak}</div></div>`;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  /* ---------- COINS TAB ---------- */
+  async function renderCoins(el) {
+    const s = await Settings.get();
+    const balance = CoinSystem.get();
+    el.innerHTML = `
+      <h3 style="margin-bottom:10px;">Coin Controls</h3>
+      <div class="card col" style="margin-bottom:16px;">
+        <div class="row between"><span>Current balance</span><strong>🪙 ${balance}</strong></div>
+      </div>
+      <div class="card col">
+        <label class="field">Coins per correct answer: <span id="cpcOut">${s.coinsPerCorrect}</span>
+          <input type="range" min="1" max="10" value="${s.coinsPerCorrect}" id="cpcRange"></label>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn btn-secondary btn-block" id="grantBtn">Give 10 bonus coins</button>
+          <button class="btn btn-danger btn-block" id="resetCoinsBtn">Reset to 0</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('cpcRange').oninput = async (e) => {
+      document.getElementById('cpcOut').textContent = e.target.value;
+      await Settings.save({ coinsPerCorrect: Number(e.target.value) });
+    };
+    document.getElementById('grantBtn').onclick = async () => { await CoinSystem.add(10); renderContent(); };
+    document.getElementById('resetCoinsBtn').onclick = async () => { await Storage.set('coins', 'balance', 0); await CoinSystem.load(); renderContent(); };
+  }
+
+  /* ---------- CUSTOMIZATION TAB ---------- */
+  const AVATAR_EMOJIS = ['🦸','🧙','🐯','🦄','🐉','🚀','⚡','🌟','🦊','🐨','🥷','👑'];
+  const CELEBRATIONS = [
+    { id: 'confetti', label: '🎉 Confetti' },
+    { id: 'stars', label: '⭐ Stars' },
+    { id: 'fireworks', label: '🎆 Fireworks' },
+    { id: 'minimal', label: '✨ Minimal' },
+  ];
+  async function renderCustomization(el) {
+    const s = await Settings.get();
+    el.innerHTML = `
+      <h3 style="margin-bottom:10px;">Kid Customization</h3>
+      <div class="card col" style="margin-bottom:16px;">
+        <label class="field">Kid's display name
+          <input type="text" id="kidNameInput" value="${Util.escapeHtml(s.kidName)}"></label>
+        <label class="field">Avatar
+          <div class="row wrap" id="avatarPicker" style="gap:8px;">
+            ${AVATAR_EMOJIS.map(e => `<button type="button" class="avatar-opt${e===s.avatarEmoji?' sel':''}" data-emoji="${e}">${e}</button>`).join('')}
+          </div>
+        </label>
+        <label class="field">Avatar color
+          <input type="color" id="avatarColorInput" value="${s.avatarColor}"></label>
+        <label class="field">App theme color
+          <input type="color" id="themeColorInput" value="${s.themeColor}"></label>
+      </div>
+      <div class="card col" style="margin-bottom:16px;">
+        <label class="field">Daily goal (problems/day): <span id="goalOut">${s.dailyGoal}</span>
+          <input type="range" min="0" max="50" step="5" value="${s.dailyGoal}" id="goalRange"></label>
+        <label class="field">Questions per practice session: <span id="sessOut">${s.sessionLength}</span>
+          <input type="range" min="4" max="20" step="1" value="${s.sessionLength}" id="sessRange"></label>
+        <label class="field">Screen time reminder (minutes, 0 = off): <span id="stOut">${s.screenTimeLimitMin}</span>
+          <input type="range" min="0" max="60" step="5" value="${s.screenTimeLimitMin}" id="stRange"></label>
+      </div>
+      <div class="card col" style="margin-bottom:16px;">
+        <label class="field">Celebration style
+          <select id="celebSelect">${CELEBRATIONS.map(c => `<option value="${c.id}" ${c.id===s.celebrationStyle?'selected':''}>${c.label}</option>`).join('')}</select></label>
+        <div class="row between"><span>Auto-adjust difficulty from accuracy</span>
+          <button type="button" class="toggle${s.autoDifficulty?' on':''}" id="autoDiffToggle"><div class="knob"></div></button></div>
+        <div class="row between"><span>Weekly summary notification</span>
+          <button type="button" class="toggle${s.weeklyReportOptIn?' on':''}" id="weeklyToggle"><div class="knob"></div></button></div>
+      </div>
+      <button class="btn btn-primary btn-block" id="saveCustomBtn">Save</button>
+    `;
+    let pickedEmoji = s.avatarEmoji;
+    document.querySelectorAll('[data-emoji]').forEach(btn => {
+      btn.onclick = () => {
+        pickedEmoji = btn.dataset.emoji;
+        document.querySelectorAll('[data-emoji]').forEach(b => b.classList.toggle('sel', b === btn));
+      };
+    });
+    document.getElementById('goalRange').oninput = (e) => document.getElementById('goalOut').textContent = e.target.value;
+    document.getElementById('sessRange').oninput = (e) => document.getElementById('sessOut').textContent = e.target.value;
+    document.getElementById('stRange').oninput = (e) => document.getElementById('stOut').textContent = e.target.value;
+    document.getElementById('saveCustomBtn').onclick = async () => {
+      await Settings.save({
+        kidName: document.getElementById('kidNameInput').value.trim() || 'Math Star',
+        avatarEmoji: pickedEmoji,
+        avatarColor: document.getElementById('avatarColorInput').value,
+        themeColor: document.getElementById('themeColorInput').value,
+        dailyGoal: Number(document.getElementById('goalRange').value),
+        sessionLength: Number(document.getElementById('sessRange').value),
+        screenTimeLimitMin: Number(document.getElementById('stRange').value),
+        celebrationStyle: document.getElementById('celebSelect').value,
+        autoDifficulty: document.getElementById('autoDiffToggle').classList.contains('on'),
+        weeklyReportOptIn: document.getElementById('weeklyToggle').classList.contains('on'),
+      });
+      Util.toast('Saved');
+      KidUI.renderHome();
+    };
+    document.getElementById('autoDiffToggle').onclick = (e) => e.currentTarget.classList.toggle('on');
+    document.getElementById('weeklyToggle').onclick = (e) => e.currentTarget.classList.toggle('on');
+  }
+
+  /* ---------- FAMILY TAB (auth, sync, kid code) ---------- */
+  async function renderFamily(el) {
+    const local = await FamilyAuth.getLocal();
+    if (!local || local.role !== 'parent') {
+      el.innerHTML = `
+        <h3 style="margin-bottom:10px;">Family & Sync</h3>
+        <div class="card col">
+          <p class="muted">Sign in as a grown-up to get a family code, sync progress across devices, and unlock cloud backup.</p>
+          <button class="btn btn-primary btn-block" id="goSignInBtn">Sign In / Sign Up</button>
+        </div>
+      `;
+      document.getElementById('goSignInBtn').onclick = () => { Nav.go('view-parent-auth'); AppAuth.showAuthView(); };
+      return;
+    }
+    el.innerHTML = `
+      <h3 style="margin-bottom:10px;">Family & Sync</h3>
+      <div class="card col" style="margin-bottom:16px;">
+        <p class="muted">Signed in as</p>
+        <strong>${Util.escapeHtml(local.parentUid ? (fbAuth.currentUser && fbAuth.currentUser.email) || '' : '')}</strong>
+      </div>
+      <div class="card col" style="margin-bottom:16px;">
+        <p class="muted">Give this code to your kid's device (Enter Your Family Code screen) to link it and start syncing.</p>
+        <div class="code-display">${local.familyId}</div>
+        <div class="row">
+          <button class="btn btn-secondary btn-block" id="shareCodeBtn">Share Code</button>
+          <button class="btn btn-ghost btn-block" id="regenCodeBtn">Regenerate Code</button>
+        </div>
+      </div>
+      <div class="card col" style="margin-bottom:16px;">
+        <div class="row between"><span>Notifications</span>
+          <button class="btn btn-secondary" id="enableNotifBtn">Enable</button></div>
+        <p class="muted">Get an alert when a session finishes, a streak record is set, or accuracy drops on a topic.</p>
+      </div>
+      <div class="card col">
+        <button class="btn btn-danger btn-block" id="signOutBtn">Sign Out</button>
+      </div>
+    `;
+    document.getElementById('shareCodeBtn').onclick = async () => {
+      const text = `Join our Math Quest family! Open the app, tap "I'm a Kid", and enter code: ${local.familyId}`;
+      if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) {} }
+      try { await navigator.clipboard.writeText(local.familyId); Util.toast('Code copied'); }
+      catch (e) { Util.toast(local.familyId); }
+    };
+    document.getElementById('regenCodeBtn').onclick = () => {
+      Modal.open(`
+        <h3>Regenerate Code?</h3>
+        <p class="muted">Any device using the old code will stop syncing. Use this if a code was shared by mistake.</p>
+        <div class="row" style="margin-top:16px;">
+          <button class="btn btn-ghost btn-block" id="cancelRegenBtn">Cancel</button>
+          <button class="btn btn-danger btn-block" id="confirmRegenBtn">Regenerate</button>
+        </div>
+      `);
+      document.getElementById('cancelRegenBtn').onclick = Modal.close;
+      document.getElementById('confirmRegenBtn').onclick = async () => {
+        try {
+          const newId = await FamilyAuth.regenerateCode(local.familyId);
+          await CloudSync.start(newId);
+          Modal.close();
+          Util.toast('New code: ' + newId);
+          renderContent();
+        } catch (e) { Util.toast(e.message || 'Could not regenerate'); }
+      };
+    };
+    document.getElementById('enableNotifBtn').onclick = async () => {
+      const perm = await NotificationCenter.requestPermission();
+      Util.toast(perm === 'granted' ? 'Notifications enabled' : 'Notifications blocked in browser settings');
+    };
+    document.getElementById('signOutBtn').onclick = () => {
+      Modal.open(`
+        <h3>Sign out?</h3>
+        <p class="muted">This device will stop syncing until you sign in again. Local data on this device stays put.</p>
+        <div class="row" style="margin-top:16px;">
+          <button class="btn btn-ghost btn-block" id="cancelSignOutBtn">Cancel</button>
+          <button class="btn btn-danger btn-block" id="confirmSignOutBtn">Sign Out</button>
+        </div>
+      `);
+      document.getElementById('cancelSignOutBtn').onclick = Modal.close;
+      document.getElementById('confirmSignOutBtn').onclick = async () => {
+        await CloudSync.stop();
+        await FamilyAuth.signOut();
+        Modal.close();
+        location.reload();
+      };
+    };
+  }
+
+  /* ---------- NOTIFICATIONS TAB ---------- */
+  async function renderNotifications(el) {
+    const items = await NotificationCenter.all();
+    await NotificationCenter.markAllRead();
+    const ICONS = { session: '✅', streak: '🔥', goal: '🎯', struggle: '💛' };
+    el.innerHTML = `
+      <div class="row between" style="margin-bottom:12px;">
+        <h3>Notifications</h3>
+      </div>
+      <div class="col" id="notifList">
+        ${items.length ? items.map(n => `
+          <div class="notif-row">
+            <div class="notif-icon">${ICONS[n.type] || '🔔'}</div>
+            <div>
+              <strong>${Util.escapeHtml(n.title)}</strong>
+              <div class="muted">${Util.escapeHtml(n.body || '')}</div>
+              <div class="muted" style="font-size:11px;">${new Date(n.createdAt).toLocaleString()}</div>
+            </div>
+          </div>
+        `).join('') : '<div class="empty-state">No notifications yet — they will show up here as your kid practices.</div>'}
+      </div>
+    `;
+    document.getElementById('notifDot').style.display = 'none';
+  }
+
+  /* ---------- SETTINGS TAB ---------- */
+  async function renderSettings(el) {
+    const s = await Settings.get();
+    el.innerHTML = `
+      <h3 style="margin-bottom:10px;">Settings</h3>
+      <div class="card col">
+        <div class="row between"><span>Sound effects</span>
+          <button type="button" class="toggle${s.sound ? ' on' : ''}" id="soundToggle"><div class="knob"></div></button></div>
+        <button class="btn btn-secondary" id="changePinBtn">Change Parent PIN</button>
+      </div>
+    `;
+    document.getElementById('soundToggle').onclick = async (e) => {
+      const on = !e.currentTarget.classList.contains('on');
+      e.currentTarget.classList.toggle('on', on);
+      await Settings.save({ sound: on });
+    };
+    document.getElementById('changePinBtn').onclick = async () => {
+      await Storage.del('pin', 'value');
+      PinGate.open(() => { Nav.go('view-parent'); renderTabs(); Util.toast('PIN updated'); });
+    };
+  }
+
+  /* ---------- DATA TAB (import/export/reset) ---------- */
+  async function renderData(el) {
+    el.innerHTML = `
+      <h3 style="margin-bottom:10px;">Data</h3>
+      <div class="card col" style="margin-bottom:16px;">
+        <p class="muted">Export everything (problems, lessons, progress, settings) as a backup file, or restore from one.</p>
+        <button class="btn btn-secondary" id="exportBtn">Export Backup</button>
+        <label class="btn btn-secondary">Import Backup<input type="file" accept="application/json" id="importInput" style="display:none;"></label>
+      </div>
+      <div class="card col">
+        <p class="muted">This clears all problems, lessons, progress, and coins on this iPad. This cannot be undone.</p>
+        <button class="btn btn-danger" id="resetAllBtn">Reset Everything</button>
+      </div>
+    `;
+    document.getElementById('exportBtn').onclick = async () => {
+      const dump = await Storage.exportAll();
+      const blob = new Blob([JSON.stringify(dump)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'mathquest-backup-' + new Date().toISOString().slice(0,10) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    };
+    document.getElementById('importInput').onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const text = await file.text();
+      try {
+        const dump = JSON.parse(text);
+        await Storage.importAll(dump);
+        Util.toast('Backup restored');
+        await CoinSystem.load();
+        renderContent();
+      } catch (err) { Util.toast('Invalid backup file'); }
+    };
+    document.getElementById('resetAllBtn').onclick = () => {
+      Modal.open(`
+        <h3>Are you sure?</h3>
+        <p class="muted">All problems, lessons, coins, and progress will be permanently deleted.</p>
+        <div class="row" style="margin-top:16px;">
+          <button class="btn btn-ghost btn-block" id="cancelResetBtn">Cancel</button>
+          <button class="btn btn-danger btn-block" id="confirmResetBtn">Delete Everything</button>
+        </div>
+      `);
+      document.getElementById('cancelResetBtn').onclick = Modal.close;
+      document.getElementById('confirmResetBtn').onclick = async () => {
+        await Storage.wipeAll();
+        Modal.close();
+        location.reload();
+      };
+    };
+  }
+
+  return { renderTabs, refreshIfNotifTab };
+})();
+</script>
+<script>
+/* ============================================================
+   APP AUTH UI
+   Wires the Welcome / Parent Sign-in / Kid Code screens. This is
+   presentation glue only — the real logic lives in FamilyAuth.
+   ============================================================ */
+const AppAuth = (() => {
+  let authMode = 'signin'; // 'signin' | 'signup'
+
+  function showAuthView() {
+    authMode = 'signin';
+    renderAuthForm();
+  }
+
+  function renderAuthForm() {
+    document.getElementById('authTitle').textContent = authMode === 'signup' ? 'Create Grown-up Account' : 'Grown-up Sign In';
+    document.getElementById('authKidNameWrap').style.display = authMode === 'signup' ? 'flex' : 'none';
+    document.getElementById('authSubmitBtn').textContent = authMode === 'signup' ? 'Create Account' : 'Sign In';
+    document.getElementById('authToggleModeBtn').textContent = authMode === 'signup' ? 'Already have an account? Sign in' : 'Need an account? Sign up';
+    document.getElementById('authError').textContent = '';
+  }
+
+  async function enterKidHome() {
+    Nav.go('view-kid-home');
+    await CoinSystem.load();
+    await Settings.applyTheme(await Settings.get());
+    await KidUI.renderHome();
+  }
+
+  async function enterAsParent(familyId) {
+    await CloudSync.start(familyId);
+    await CloudSync.pullAll();
+    await Settings.applyTheme(await Settings.get());
+    await CoinSystem.load();
+    Nav.go('view-parent');
+    ParentUI.renderTabs();
+  }
+
+  function init() {
+    document.getElementById('roleKidBtn').onclick = () => { Nav.go('view-kid-code'); };
+    document.getElementById('roleParentBtn').onclick = () => { Nav.go('view-parent-auth'); showAuthView(); };
+    document.getElementById('authBackBtn').onclick = () => Nav.go('view-welcome');
+    document.getElementById('kidCodeBackBtn').onclick = () => Nav.go('view-welcome');
+
+    document.getElementById('authToggleModeBtn').onclick = () => {
+      authMode = authMode === 'signup' ? 'signin' : 'signup';
+      renderAuthForm();
+    };
+    document.getElementById('authForgotBtn').onclick = async () => {
+      const email = document.getElementById('authEmail').value.trim();
+      if (!email) { document.getElementById('authError').textContent = 'Enter your email first.'; return; }
+      try { await FamilyAuth.sendPasswordReset(email); Util.toast('Password reset email sent'); }
+      catch (e) { document.getElementById('authError').textContent = e.message; }
+    };
+    document.getElementById('authSubmitBtn').onclick = async () => {
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const errEl = document.getElementById('authError');
+      errEl.textContent = '';
+      if (!email || !password) { errEl.textContent = 'Enter an email and password.'; return; }
+      try {
+        let familyId;
+        if (authMode === 'signup') {
+          const kidName = document.getElementById('authKidName').value.trim() || 'Math Star';
+          familyId = await FamilyAuth.signUpParent(email, password, kidName);
+          await Settings.save({ kidName });
+        } else {
+          familyId = await FamilyAuth.signInParent(email, password);
+        }
+        await enterAsParent(familyId);
+      } catch (e) { errEl.textContent = e.message || 'Something went wrong.'; }
+    };
+
+    document.getElementById('kidCodeSubmitBtn').onclick = async () => {
+      const code = document.getElementById('kidCodeInput').value;
+      const errEl = document.getElementById('kidCodeError');
+      errEl.textContent = '';
+      try {
+        const familyId = await FamilyAuth.linkKidWithCode(code);
+        await CloudSync.start(familyId);
+        await CloudSync.pullAll();
+        await enterKidHome();
+        Util.toast('Linked! Have fun 🎉');
+      } catch (e) { errEl.textContent = e.message || 'Could not join that family.'; }
+    };
+  }
+
+  return { init, showAuthView, enterKidHome, enterAsParent };
+})();
+</script>
+<script>
+/* ============================================================
+   BOOTSTRAP
+   ============================================================ */
+(async function init() {
+  await CoinSystem.load();
+  await Settings.applyTheme(await Settings.get());
+  PinGate.init();
+  AppAuth.init();
+
+  document.getElementById('problemExitBtn').onclick = () => Runner.exit();
+  document.getElementById('completeDoneBtn').onclick = async () => { Nav.go('view-kid-home'); await KidUI.renderHome(); };
+  document.getElementById('parentExitBtn').onclick = async () => { Nav.go('view-kid-home'); await KidUI.renderHome(); };
+  document.getElementById('notifBellBtn').onclick = () => {
+    document.querySelectorAll('#parentTabs .tab-btn').forEach(b => { if (b.textContent.includes('Notifications')) b.click(); });
+  };
+
+  CloudSync.setOnRemoteChange((store) => {
+    // A change came in from another linked device — refresh whatever is
+    // currently on screen so it stays live without a manual reload.
+    if (document.getElementById('view-kid-home').classList.contains('active')) KidUI.renderHome();
+    if (document.getElementById('view-parent').classList.contains('active')) ParentUI.renderTabs();
+    if (store === 'notifications') NotificationCenter.updateBadge();
+  });
+
+  // Resume a previous session without asking again: parents get signed back
+  // into their family + sync, kid devices reconnect with their saved code.
+  const local = await FamilyAuth.getLocal();
+  if (local && local.role === 'kid') {
+    await CloudSync.start(local.familyId);
+    await AppAuth.enterKidHome();
+  } else if (local && local.role === 'parent' && fbAuth.currentUser) {
+    await AppAuth.enterAsParent(local.familyId);
+  } else if (local && local.role === 'parent') {
+    // Wait for Firebase to restore the auth session (async on page load).
+    const unsub = fbAuth.onAuthStateChanged(async (user) => {
+      unsub();
+      if (user && !CloudSync.isActive()) await AppAuth.enterAsParent(local.familyId);
+      else if (!user) Nav.go('view-welcome');
+    });
+  } else {
+    Nav.go('view-welcome');
+  }
+
+  // Refresh kid home whenever we return to it (mastery stars / lessons may have changed)
+  const homeObserver = new MutationObserver(() => {
+    if (document.getElementById('view-kid-home').classList.contains('active')) KidUI.renderHome();
+  });
+  homeObserver.observe(document.getElementById('view-kid-home'), { attributeFilter: ['class'] });
+
+  // Keep the viewport height correct on iPad when the on-screen keyboard or
+  // Safari's chrome shows/hides.
+  function setVh() { document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
+  setVh();
+  window.addEventListener('resize', Util.debounce(setVh, 100));
+
+  // Prevent iOS double-tap-to-zoom / pinch-zoom inside the app shell.
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) e.preventDefault();
+    lastTouchEnd = now;
+  }, { passive: false });
+})();
+</script>
+</body>
+</html>
